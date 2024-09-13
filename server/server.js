@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import AdminRoute from './routes/admin.route.js'
 
 
 
@@ -38,6 +39,8 @@ app.get('/', (req, res) => {
         message: "Welcome to Integaltic Trade Network"
     })
 })
+
+app.use('/api/admin', AdminRoute)
 
 
 
