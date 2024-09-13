@@ -35,7 +35,7 @@ export default {
   			bodyColor: '#212428',
   			lightText: '#c4cfde',
   			boxBg: 'linear-gradient(145deg, #1e2024, #23272b)',
-  			designColor: '#ff014f',
+  			designColor: '#66FCF1',
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
   			ring: 'hsl(var(--ring))',

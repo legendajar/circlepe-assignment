@@ -61,7 +61,7 @@ export const login = async (req, res) => {
             })
         }
 
-        const admin = await adminModel.findOne({ email: email })
+        const admin = await adminModel.findOne({ email })
         if (!admin) {
             return res.status(404).json({
                 success: false,
@@ -73,7 +73,7 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid Email or Password"
+                message: "Invalid Password"
             })
         }
 
