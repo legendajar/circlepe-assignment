@@ -49,7 +49,7 @@ const Sidebar = () => {
                                         View Space Stations
                                     </li>
                                 </Link>
-                                <Link to='/admin/student/find' className="w-full">
+                                <Link to='/admin/spacestation/find' className="w-full">
                                     <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         Find Space Stations 
                                     </li>
