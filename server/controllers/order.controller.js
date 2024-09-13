@@ -1,4 +1,4 @@
-import orderModel from "../models/order.model";
+import orderModel from "../models/order.model.js";
 
 export const addOrder = async (req, res) => {
     try {
@@ -68,6 +68,37 @@ export const getOrder = async (req, res) => {
             data: order
         })
     } catch(err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const getOrderByUserId = async (req, res) => {
+    try {
+        const {id} = req.params;
+        if (!id) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid Id"
+            })
+        }
+
+        const order = await orderModel.find({user_id: id});
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order Not Found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: order
+        })
+    } catch (err) {
         console.log(err)
         return res.status(500).json({
             success: false,

@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser'
 import AdminRoute from './routes/admin.route.js'
 import PlanetRoute from './routes/planet.controller.js'
 import SpaceStationRoute from './routes/spaceStation.route.js'
+import OrderRoute from './routes/order.route.js'
 
 
 
@@ -45,6 +46,7 @@ app.get('/', (req, res) => {
 app.use('/api/admin', AdminRoute)
 app.use('/api/planet', PlanetRoute)
 app.use('/api/spaceStation', SpaceStationRoute)
+app.use('/api/order', OrderRoute)
 
 
 
