@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const planetSchema = new mongoose.Schema({
-    name: {},
+    name: { type: String, required: true },
     products: [{
         id: {type: String, required: true},
         name: {type: String, required: true},
