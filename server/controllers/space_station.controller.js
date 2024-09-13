@@ -1,4 +1,4 @@
-import spaceStationModel from "../models/space_station.model";
+import spaceStationModel from "../models/space_station.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
