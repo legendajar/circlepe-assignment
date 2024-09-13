@@ -37,7 +37,7 @@ export const createTransaction = async (req, res) => {
 }
 
 
-const viewTransaction = async (req, res) => {
+export const viewTransaction = async (req, res) => {
     try {
         const transactions = await transactionModel.find()
         return res.status(200).json({
@@ -53,7 +53,7 @@ const viewTransaction = async (req, res) => {
     }
 }
 
-const viewTransactionById = async (req, res) => {
+export const viewTransactionById = async (req, res) => {
     try {
         const { id } = req.params
         if (!id) {
