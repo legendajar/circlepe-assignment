@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 import AdminRoute from './routes/admin.route.js'
+import PlanetRoute from './routes/planet.controller.js'
 
 
 
@@ -41,6 +42,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/admin', AdminRoute)
+app.use('/api/planet', PlanetRoute)
 
 
 
