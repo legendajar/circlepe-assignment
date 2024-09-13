@@ -1,16 +1,16 @@
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table"
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
-const ListPlanetSection = () => {
+const ListProductSection = () => {
   return (
     <div className='w-full h-full rounded-md shadow-xl p-2'>
-        <h1 className='text-xl font-titleFonts font-bold my-2'>Planet List</h1>
+        <h1 className='text-xl font-titleFonts font-bold my-2'>Product List</h1>
         <div className='w-full'>
             <Table>
                 <TableHeader>
@@ -58,4 +58,4 @@ const ListPlanetSection = () => {
   )
 }
 
-export default ListPlanetSection
+export default ListProductSection

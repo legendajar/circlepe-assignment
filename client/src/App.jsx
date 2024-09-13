@@ -5,6 +5,8 @@ import ListPlanet from "./pages/Admin/ListPlanet/ListPlanet";
 import FindPlanet from "./pages/Admin/FindPlanet/FindPlanet";
 import ListSpaceStation from "./pages/Admin/ListSpaceStation/ListSpaceStation";
 import FindSpaceStation from "./pages/Admin/FindSpaceStation/FindSpaceStation";
+import ListProduct from "./pages/Admin/ListProduct/ListProduct";
+import FindProduct from "./pages/Admin/FindProduct/FindProduct";
 
 
 const appRouter = createBrowserRouter([
@@ -38,6 +40,16 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/spacestation/find',
     element: <FindSpaceStation />
+  },
+
+  {
+    path: '/admin/product/list',
+    element: <ListProduct />
+  },
+
+  {
+    path: '/admin/product/find',
+    element: <FindProduct />
   }
 
 ]);

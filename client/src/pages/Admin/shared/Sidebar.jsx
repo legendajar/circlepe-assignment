@@ -66,12 +66,12 @@ const Sidebar = () => {
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
-                                <Link to='/admin/student/add' className='w-full'>
+                                <Link to='/admin/product/list' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         List Products
                                     </li>
                                 </Link>
-                                <Link to='/admin/student/add' className='w-full'>
+                                <Link to='/admin/product/find' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         Find Products
                                     </li>
