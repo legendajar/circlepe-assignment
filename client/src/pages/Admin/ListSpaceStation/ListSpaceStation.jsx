@@ -1,9 +1,8 @@
-import React from 'react'
 import Navbar from '../shared/Navbar'
 import Sidebar from '../shared/Sidebar'
-import FindPlanetSection from './FindPlanetSection'
+import ListSpaceStationSection from './ListSpaceStationSection'
 
-const FindPlanet = () => {
+const ListSpaceStation = () => {
   return (
     <div>
         <Navbar />
@@ -12,11 +11,11 @@ const FindPlanet = () => {
                 <Sidebar />
             </div>
             <div className='w-5/6 px-2 py-3'>
-                <FindPlanetSection />
+                <ListSpaceStationSection />
             </div>
         </div>
     </div>
   )
 }
 
-export default FindPlanet
+export default ListSpaceStation
