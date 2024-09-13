@@ -1,6 +1,7 @@
 import planetModel from "../models/planet.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import productModel from "../models/product.model.js";
 
 // Add Planet
 export const addPlanet = async(req, res) => {
@@ -57,7 +58,7 @@ export const addPlanet = async(req, res) => {
     }
 }
 
-// login Planet
+// Login Planet
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -73,8 +74,42 @@ export const login = async (req, res) => {
                 message: "Password Not Found"
             })
         }
+        const planet = await productModel.findOne({email: email})
+        if(planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid Email or Password"
+            })
+        }
+        const isMatch = await bcrypt.compare(password, planet.password)
+        if (!isMatch) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Email or Password"
+            })
+        }
 
-        
+        const tokenData = {
+            planetId: planet._id
+        }
+
+        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: '1d'});
+        user = {
+            _id: planet._id,
+            email: planet.email,
+        }
+
+        return res.status(200).cookie("token", token, {
+            maxAge: 1 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            sameSite: 'None',
+            secure: process.env.NODE_ENV==='production'
+        }).json({
+            success: true,
+            message: "Login Successfully",
+            user: user,
+            token: token
+        })
     } catch (err) {
         console.log(err)
         return res.status(500).json({
@@ -179,3 +214,34 @@ export const updatePlanet = async (req, res) => {
     }
 }
 
+// Delete Planet
+export const deletePlanet = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(500).json({
+                success: false,
+                message: "Invalid Planet Id"
+            })
+        }
+        const planet = await planetModel.findById(id)
+        if (!planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Planet not found"
+            })
+        }
+
+        await planetModel.findByIdAndDelete(id)
+        return res.status(200).josn({
+            success: true,
+            message: "Planet Deleted Successfully"
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
