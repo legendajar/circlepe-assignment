@@ -1,7 +1,6 @@
 import planetModel from "../models/planet.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import productModel from "../models/product.model.js";
 
 // Add Planet
 export const addPlanet = async(req, res) => {
