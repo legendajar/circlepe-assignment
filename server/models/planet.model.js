@@ -2,23 +2,9 @@ import mongoose from 'mongoose'
 
 const planetSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    products: [{
-        id: {type: String, required: true},
-        name: {type: String, required: true},
-        price: {type: Number, required: true},
-        quantity: {type: Number, required: true},
-        image: {type: String, required: true},
-        description: {type: String, required: true},
-        category: {type: String, required: true},
-        ratings: [{
-            userId: {type: String, required: true},
-            rating: {type: Number, required: true},
-            comment: {type: String, required: true}
-        }]
-    }],
     image: { type: String },
     mobile: { type: Number, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     last_login: { type: Date, default: Date.now()},
     last_IP_Address: { type: Number },
