@@ -9,7 +9,7 @@ const AdminDashboardSection = () => {
     
     return (
         <div className='flex flex-col gap-5'>
-            <div className='my-2 flex gap-2'>
+            <div className='my-2 grid lgl:grid-cols-2 xl:grid-cols-3  gap-2'>
                 <AdminDashboardCard />
                 <AdminDashboardCard />
                 <AdminDashboardCard />

@@ -23,7 +23,7 @@ const chartConfig = {
 
 export function AdminDashboardChartData() {
   return (
-    <ChartContainer config={chartConfig} className="h-[300px] w-full">
+    <ChartContainer config={chartConfig} className="w-13 smd:w-49 sml:h-[300px] sml:w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData}>
           <CartesianGrid vertical={false} />

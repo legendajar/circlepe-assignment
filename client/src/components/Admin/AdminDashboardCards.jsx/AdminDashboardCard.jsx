@@ -9,7 +9,7 @@ import {
 
 const AdminDashboardCard = () => {
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[250px] smd:w-[350px]">
       <CardHeader>
         <CardTitle>Planets</CardTitle>
         <CardDescription>Planets Data</CardDescription>
