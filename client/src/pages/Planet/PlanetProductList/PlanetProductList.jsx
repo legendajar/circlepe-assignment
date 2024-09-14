@@ -1,8 +1,9 @@
+import React from 'react'
 import Navbar from '../shared/Navbar'
 import Sidebar from '../shared/Sidebar'
-import AddProductSection from './AddProductSection'
+import PlanetProductListSection from './PlanetProductListSection'
 
-const AddProduct = () => {
+const PlanetProductList = () => {
     return (
         <div>
             <Navbar />
@@ -11,7 +12,7 @@ const AddProduct = () => {
                     <Sidebar />
                 </div>
                 <div className='w-5/6'>
-                    <AddProductSection />
+                    <PlanetProductListSection />
                 </div>
             </div>
     
@@ -19,4 +20,4 @@ const AddProduct = () => {
     )
 }
 
-export default AddProduct
+export default PlanetProductList

@@ -1,20 +1,19 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import AdminLogin from "./pages/Admin/AdminLogin/AdminLogin"
-import AdminDashboard from "./pages/Admin/AdminDashboard/AdminDashboard";
-import ListPlanet from "./pages/Admin/ListPlanet/ListPlanet";
-import FindPlanet from "./pages/Admin/FindPlanet/FindPlanet";
-import ListSpaceStation from "./pages/Admin/ListSpaceStation/ListSpaceStation";
-import FindSpaceStation from "./pages/Admin/FindSpaceStation/FindSpaceStation";
-import ListProduct from "./pages/Admin/ListProduct/ListProduct";
-import FindProduct from "./pages/Admin/FindProduct/FindProduct";
-import ListTransaction from "./pages/Admin/ListTransaction/ListTransaction";
-import FindTransaction from "./pages/Admin/FindTransaction.jsx/FindTransaction";
-import FindOrder from "./pages/Admin/FindOrder/FindOrder";
-import ListOrder from "./pages/Admin/ListOrder/ListOrder";
-import Dashboard from "./pages/Planet/Dashboard/Dashboard";
-import AddProduct from "./pages/Planet/AddProduct/AddProduct";
-import PlanetListOrder from "./pages/Planet/PlanetListOrder/PlanetListOrder";
-import PlanetProductList from "./pages/Planet/PlanetProductList/PlanetProductList";
+import AdminLogin from "../Admin/AdminLogin/AdminLogin"
+import AdminDashboard from "../Admin/AdminDashboard/AdminDashboard";
+import ListPlanet from "../Admin/ListPlanet/ListPlanet";
+import FindPlanet from "../Admin/FindPlanet/FindPlanet";
+import ListSpaceStation from "../Admin/ListSpaceStation/ListSpaceStation";
+import FindSpaceStation from "../Admin/FindSpaceStation/FindSpaceStation";
+import ListProduct from "../Admin/ListProduct/ListProduct";
+import FindProduct from "../Admin/FindProduct/FindProduct";
+import ListTransaction from "../Admin/ListTransaction/ListTransaction";
+import FindTransaction from "../Admin/FindTransaction.jsx/FindTransaction";
+import FindOrder from "../Admin/FindOrder/FindOrder";
+import ListOrder from "../Admin/ListOrder/ListOrder";
+import Dashboard from "../Planet/Dashboard/Dashboard";
+import AddProduct from "../Planet/AddProduct/AddProduct";
+import LIstProduct from "../Planet/ListProduct/LIstProduct";
 
 
 const appRouter = createBrowserRouter([
@@ -92,13 +91,13 @@ const appRouter = createBrowserRouter([
   },
 
   {
-    path: '/planet/product/list',
-    element: <PlanetProductList />
+    path: '/planet/product/view',
+    element: <LIstProduct />
   },
 
   {
     path: '/planet/order/view',
-    element: <PlanetListOrder />
+    element: <ListOrder />
   }
 
   // Space Station Route

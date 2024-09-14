@@ -50,14 +50,9 @@ const Sidebar = () => {
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
-                                <Link to='/admin/spacestation/view' className='w-full'>
+                                <Link to='/planet/product/view' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        View Space Stations
-                                    </li>
-                                </Link>
-                                <Link to='/admin/spacestation/find' className="w-full">
-                                    <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        Find Space Stations 
+                                        View Orders
                                     </li>
                                 </Link>
                             </ul>

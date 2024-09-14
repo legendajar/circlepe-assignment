@@ -1,4 +1,3 @@
-import React from 'react'
 import Navbar from '../shared/Navbar'
 import Sidebar from '../shared/Sidebar'
 import ListOrderSection from './ListOrderSection'
