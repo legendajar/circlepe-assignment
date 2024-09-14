@@ -7,6 +7,10 @@ import ListSpaceStation from "./pages/Admin/ListSpaceStation/ListSpaceStation";
 import FindSpaceStation from "./pages/Admin/FindSpaceStation/FindSpaceStation";
 import ListProduct from "./pages/Admin/ListProduct/ListProduct";
 import FindProduct from "./pages/Admin/FindProduct/FindProduct";
+import ListTransaction from "./pages/Admin/ListTransaction/ListTransaction";
+import FindTransaction from "./pages/Admin/FindTransaction.jsx/FindTransaction";
+import FindOrder from "./pages/Admin/FindOrder/FindOrder";
+import ListOrder from "./pages/Admin/ListOrder/ListOrder";
 
 
 const appRouter = createBrowserRouter([
@@ -50,6 +54,26 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/product/find',
     element: <FindProduct />
+  },
+
+  {
+    path: '/admin/transaction/list',
+    element: <ListTransaction />
+  },
+
+  {
+    path: '/admin/transaction/find',
+    element: <FindTransaction />
+  },
+
+  {
+    path: '/admin/order/find',
+    element: <FindOrder />
+  }, 
+  
+  {
+    path: '/admin/order/view',
+    element: <ListOrder />
   }
 
 ]);

@@ -7,7 +7,7 @@ const Sidebar = () => {
     <div className='w-full h-[99vh] background bg-bodyColor shadow-xl text-white'>
         <div className='flex flex-col gap-4'>
             <div className='flex flex-col items-center justify-between'>
-                <Link className='w-full'>
+                <Link to='/admin/dashboard' className='w-full'>
                     <div className='border-b px-5 flex items-center gap-2 text-lg py-2 font-bold-lg group hover:bg-designColor hover:text-white'>
                         Dashboard <LayoutDashboard />
                     </div>
@@ -88,12 +88,12 @@ const Sidebar = () => {
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
-                                <Link to='/admin/student/add' className='w-full'>
+                                <Link to='/admin/transaction/list' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         View Transactions
                                     </li>
                                 </Link>
-                                <Link to='/admin/student/add' className='w-full'>
+                                <Link to='/admin/transaction/find' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         Find Transactions
                                     </li>
@@ -110,12 +110,12 @@ const Sidebar = () => {
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
-                                <Link to='/admin/student/add' className='w-full'>
+                                <Link to='/admin/order/view' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         View Orders
                                     </li>
                                 </Link>
-                                <Link to='/admin/student/find' className="w-full">
+                                <Link to='/admin/order/find' className="w-full">
                                     <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         Find Orders
                                     </li>
