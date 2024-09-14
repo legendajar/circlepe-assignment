@@ -6,8 +6,13 @@ import {
     TableHeader,
     TableRow,
   } from "@/components/ui/table"
+import useGetAllPlanets from "@/hooks/useGetAllPlanets"
+import { useDispatch, useSelector } from "react-redux";
 
 const ListPlanetSection = () => {
+    useGetAllPlanets();
+    const dispatch = useDispatch();
+    const { planetList } = useSelector((store) => store.planet);
   return (
     <div className='w-full h-full rounded-md shadow-xl p-2'>
         <h1 className='text-xl font-titleFonts font-bold my-2'>Planet List</h1>
@@ -23,34 +28,25 @@ const ListPlanetSection = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
+                    {
+                        planetList && planetList.length > 0 ?
+                        (
+                            planetList.map((planet, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{planet.name}</TableCell>
+                                    <TableCell>{planet.mobile}</TableCell>
+                                    <TableCell>{planet.email}</TableCell>
+                                    <TableCell>{planet.productCount}</TableCell>
+                                </TableRow>
+                            ))
+                        ) : 
+                        (
+                            <TableRow>
+                                <TableCell colSpan={5}>No Data Found</TableCell>
+                            </TableRow>
+                        )
+                    }
                 </TableBody>
             </Table>
         </div>
