@@ -16,6 +16,7 @@ import planetSlice from "./planetSlice.js";
 import spaceStationSlice from "./spaceStationSlice.js";
 import productSlice from "./productSlice.js";
 import transactionSlice from "./transactionSlice.js";
+import orderSlice from "./orderSlice.js";
 
 const persistConfig = {
     key: 'root',
@@ -28,7 +29,8 @@ const rootReducer = combineReducers({
     planet: planetSlice,
     spaceStation: spaceStationSlice,
     product: productSlice,
-    transaction: transactionSlice
+    transaction: transactionSlice,
+    order: orderSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

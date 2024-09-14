@@ -2,8 +2,10 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { useSelector } from 'react-redux'
 
 const FindOrderSection = () => {
+    const {orderList} = useSelector(store => store.order)
   return (
     <div className='w-full h-full'>
         <div className='m-3 border rounded-md shadow-md p-3'>
@@ -33,34 +35,25 @@ const FindOrderSection = () => {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
+                    {
+                        orderList && orderList.length > 0 ?
+                        (
+                            orderList.map((order, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{order.name}</TableCell>
+                                    <TableCell>{order.email}</TableCell>
+                                    <TableCell>{order.mobile}</TableCell>
+                                    <TableCell>{order.productCount}</TableCell>
+                                </TableRow>
+                            ))
+                        ) : 
+                        (
+                            <TableRow>
+                                <TableCell colSpan={5}>No Records Found</TableCell>
+                            </TableRow>
+                        )
+                    }
                 </TableBody>
             </Table>
         </div>
