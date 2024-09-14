@@ -1,7 +1,9 @@
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const AdminLogin = () => {
   const [visible, setVisible] = useState(false)
@@ -34,7 +36,9 @@ const AdminLogin = () => {
                 }
             </div>
           </div>
-          <button className='w-full p-2 my-5 bg-designColor rounded-md text-black font-bold'>Login</button>
+          <Link to='/admin/dashboard'>
+            <Button className='w-full p-2 my-5 bg-designColor rounded-md text-black font-bold'>Login</Button>
+          </Link>
         </form>
       </div>
     </div>
