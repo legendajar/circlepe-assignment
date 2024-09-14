@@ -17,6 +17,7 @@ import PlanetListOrder from "./pages/Planet/PlanetListOrder/PlanetListOrder";
 import PlanetProductList from "./pages/Planet/PlanetProductList/PlanetProductList";
 import Home from "./pages/SpaceStations/Home/Home";
 import ViewProductPage from "./pages/SpaceStations/ViewProductPage/ViewProductPage";
+import OrderPage from "./pages/SpaceStations/OrderPage/OrderPage";
 
 
 const appRouter = createBrowserRouter([
@@ -112,6 +113,11 @@ const appRouter = createBrowserRouter([
   {
     path:'/product/:id',
     element: <ViewProductPage />
+  },
+
+  {
+    path: '/order',
+    element: <OrderPage />
   }
 
 ]);
