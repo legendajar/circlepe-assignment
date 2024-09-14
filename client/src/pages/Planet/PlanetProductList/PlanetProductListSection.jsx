@@ -10,8 +10,7 @@ import {
 
 const PlanetProductListSection = () => {
   return (
-    <div className='w-full h-full'>
-
+    <div className='w-full h-full p-3'>
         <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>
           <div className='flex items-center justify-between gap-5'>
             <h1 className='text-lg font-bold font-titleFonts'>Products</h1>

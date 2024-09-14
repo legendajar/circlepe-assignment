@@ -92,7 +92,7 @@ const appRouter = createBrowserRouter([
   },
 
   {
-    path: '/planet/product/list',
+    path: '/planet/product/view',
     element: <PlanetProductList />
   },
 
