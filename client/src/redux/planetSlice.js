@@ -8,7 +8,7 @@ const planetSlice = createSlice({
 
     reducers: {
         setPlanetList: (state, action) => {
-            state.user = action.payload
+            state.planetList = action.payload
         }
     }
 })

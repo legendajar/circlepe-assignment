@@ -14,6 +14,8 @@ import storage from 'redux-persist/lib/storage'
 import adminSlice from "./adminSlice.js";
 import planetSlice from "./planetSlice.js";
 import spaceStationSlice from "./spaceStationSlice.js";
+import productSlice from "./productSlice.js";
+import transactionSlice from "./transactionSlice.js";
 
 const persistConfig = {
     key: 'root',
@@ -24,7 +26,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
     admin: adminSlice,
     planet: planetSlice,
-    spaceStation: spaceStationSlice
+    spaceStation: spaceStationSlice,
+    product: productSlice,
+    transaction: transactionSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

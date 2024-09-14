@@ -6,56 +6,52 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import useGetAllProduct from "@/hooks/useGetAllProduct"
+import { useDispatch, useSelector } from "react-redux";
 
 const ListProductSection = () => {
-  return (
-    <div className='w-full h-full rounded-md shadow-xl p-2'>
-        <h1 className='text-xl font-titleFonts font-bold my-2'>Product List</h1>
-        <div className='w-full'>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead class>S.No</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Mobile</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Product Count</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+    useGetAllProduct();
+    const dispatch = useDispatch();
+    const { productList } = useSelector(store => store.product)
+    return (
+        <div className='w-full h-full rounded-md shadow-xl p-2'>
+            <h1 className='text-xl font-titleFonts font-bold my-2'>Product List</h1>
+            <div className='w-full'>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead class>S.No</TableHead>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Mobile</TableHead>
+                            <TableHead>Email</TableHead>
+                            <TableHead>Product Count</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {
+                            productList && productList.length > 0 ? 
+                            (
+                                productList.map((product, index) => (
+                                    <TableRow key={index}>
+                                        <TableCell>{index + 1}</TableCell>
+                                        <TableCell>{product.name}</TableCell>
+                                        <TableCell>{product.mobile}</TableCell>
+                                        <TableCell>{product.email}</TableCell>
+                                        <TableCell>{product.productCount}</TableCell>
+                                    </TableRow>
+                                ))
+                            ) : 
+                            (
+                                <TableRow>
+                                    <TableCell colSpan={5}> No Data Found</TableCell>
+                                </TableRow>
+                            )
+                        }
+                    </TableBody>
+                </Table>
+            </div>
         </div>
-    </div>
-  )
+    )
 }
 
 export default ListProductSection
