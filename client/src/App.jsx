@@ -11,6 +11,8 @@ import ListTransaction from "./pages/Admin/ListTransaction/ListTransaction";
 import FindTransaction from "./pages/Admin/FindTransaction.jsx/FindTransaction";
 import FindOrder from "./pages/Admin/FindOrder/FindOrder";
 import ListOrder from "./pages/Admin/ListOrder/ListOrder";
+import Dashboard from "./pages/Planet/Dashboard/Dashboard";
+import AddProduct from "./pages/Planet/AddProduct/AddProduct";
 
 
 const appRouter = createBrowserRouter([
@@ -74,7 +76,20 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/order/view',
     element: <ListOrder />
+  },
+
+  // Planet Route
+  {
+    path: '/planet/dashboard',
+    element: <Dashboard />
+  },
+
+  {
+    path: '/planet/product/add',
+    element: <AddProduct />
   }
+  // Space Station Route
+
 
 ]);
 
