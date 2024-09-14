@@ -1,5 +1,5 @@
 import { setSpaceStationList } from '@/redux/spaceStationSlice';
-import { SPACE_STATION_API_END_POINT } from '@/utils/URLS';
+import { SPACE_STATION_API_END_POINT } from '@/utils/URLS.js';
 import axios from 'axios';
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'

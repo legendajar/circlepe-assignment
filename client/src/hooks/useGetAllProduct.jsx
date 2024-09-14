@@ -1,5 +1,5 @@
 import { setProductList } from '@/redux/productSlice';
-import { PRODUCT_API_END_POINT } from '@/utils/URLS';
+import { PRODUCT_API_END_POINT } from '@/utils/URLS.js';
 import axios from 'axios';
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'

@@ -1,5 +1,5 @@
 import { setPlanetList } from '@/redux/planetSlice';
-import { PLANET_API_END_POINT } from '@/utils/URLS';
+import { PLANET_API_END_POINT } from '@/utils/URLS.js';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux'

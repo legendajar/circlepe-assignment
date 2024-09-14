@@ -1,5 +1,5 @@
 import { setTransactionList } from '@/redux/transactionSlice'
-import { TRANSACTION_API_END_POINT } from '@/utils/URLS'
+import { TRANSACTION_API_END_POINT } from '@/utils/URLS.js'
 import axios from 'axios'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
