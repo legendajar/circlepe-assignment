@@ -15,6 +15,7 @@ import Dashboard from "./pages/Planet/Dashboard/Dashboard";
 import AddProduct from "./pages/Planet/AddProduct/AddProduct";
 import PlanetListOrder from "./pages/Planet/PlanetListOrder/PlanetListOrder";
 import PlanetProductList from "./pages/Planet/PlanetProductList/PlanetProductList";
+import About from "./pages/SpaceStations/About/About";
 
 
 const appRouter = createBrowserRouter([
@@ -99,7 +100,7 @@ const appRouter = createBrowserRouter([
   {
     path: '/planet/order/view',
     element: <PlanetListOrder />
-  }
+  },
 
   // Space Station Route
 

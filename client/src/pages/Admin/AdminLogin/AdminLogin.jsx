@@ -21,7 +21,7 @@ const AdminLogin = () => {
           <h1 className='font-bold text-xl mb-5'> Admin Login </h1>
           <div className='my-5'>
             <Label htmlfor='email'>Email</Label>
-            <Input type='email' className='w-full p-2 border border-gray-300 rounded-md' />
+            <Input type='email' className='w-full p-2 border border-gray-300 rounded-md' placeholder='Email' />
           </div>
           <div className='my-5'>
             <Label htmlfor='password'>Password</Label>
