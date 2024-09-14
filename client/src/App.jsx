@@ -15,7 +15,8 @@ import Dashboard from "./pages/Planet/Dashboard/Dashboard";
 import AddProduct from "./pages/Planet/AddProduct/AddProduct";
 import PlanetListOrder from "./pages/Planet/PlanetListOrder/PlanetListOrder";
 import PlanetProductList from "./pages/Planet/PlanetProductList/PlanetProductList";
-import About from "./pages/SpaceStations/About/About";
+import Home from "./pages/SpaceStations/Home/Home";
+import ViewProductPage from "./pages/SpaceStations/ViewProductPage/ViewProductPage";
 
 
 const appRouter = createBrowserRouter([
@@ -103,7 +104,15 @@ const appRouter = createBrowserRouter([
   },
 
   // Space Station Route
+  {
+    path: '/',
+    element: <Home />
+  },
 
+  {
+    path:'/product/:id',
+    element: <ViewProductPage />
+  }
 
 ]);
 
