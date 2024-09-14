@@ -28,7 +28,7 @@ const Sidebar = () => {
                                         Add Products
                                     </li>
                                 </Link>
-                                <Link to='/admin/planet/edit' className="w-full">
+                                <Link to='/planet/product/view' className="w-full">
                                     <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
                                         View All Products 
                                     </li>

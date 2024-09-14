@@ -13,6 +13,7 @@ import FindOrder from "./pages/Admin/FindOrder/FindOrder";
 import ListOrder from "./pages/Admin/ListOrder/ListOrder";
 import Dashboard from "./pages/Planet/Dashboard/Dashboard";
 import AddProduct from "./pages/Planet/AddProduct/AddProduct";
+import LIstProduct from "./pages/Planet/ListProduct/LIstProduct";
 
 
 const appRouter = createBrowserRouter([
@@ -87,7 +88,13 @@ const appRouter = createBrowserRouter([
   {
     path: '/planet/product/add',
     element: <AddProduct />
+  },
+
+  {
+    path: '/planet/product/view',
+    element: <LIstProduct />
   }
+
   // Space Station Route
 
 
