@@ -15,10 +15,10 @@ export const addProduct = async (req, res) => {
             name: name,
             price: price,
             quantity: quantity,
-            image: file,
+            image: file.path,
             description: description,
             category: category
-        }) 
+        })
 
         return res.status(200).json({
             success: true,

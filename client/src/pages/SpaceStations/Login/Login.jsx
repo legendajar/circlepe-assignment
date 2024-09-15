@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { SPACE_STATION_API_END_POINT } from "@/utils/URLS.js";
+import { setUser } from "@/redux/spaceStationSlice";
 
 const Login = () => {
     const [visible, setVisible] = useState(false)
@@ -25,7 +26,10 @@ const Login = () => {
         })
     }
 
+    const { user } = useSelector(store => store.spaceStation)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const submitHandler = async (e) => {
         e.preventDefault();
         
@@ -42,6 +46,7 @@ const Login = () => {
             })
 
             if(res.data.success) {
+                dispatch(setUser(res.data.user))
                 navigate('/')
                 alert(res.data.message)
             }

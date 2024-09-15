@@ -59,7 +59,7 @@ const AddProductSection = () => {
         formData.append("category", input.category);
         formData.append("description", input.description);
         formData.append("file", input.file);
-        formData.append('id', setUser._id)
+        formData.append('planet_id', setUser._id)
 
         for (let pair of formData.entries()) {
             console.log(pair[0] + ': ' + pair[1]);

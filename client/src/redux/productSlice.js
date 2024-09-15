@@ -4,7 +4,8 @@ const productSlice = createSlice({
     name: "product",
     initialState: {
         productList: [],
-        planetProductList: []
+        planetProductList: [],
+        singleProduct: null
     },
 
     reducers: {
@@ -13,10 +14,14 @@ const productSlice = createSlice({
         },
         setPlanetProductList: (state, action) => {
             state.productListByPlanet = action.payload
+        },
+
+        setSingleProduct: (state, action) => {
+            state.singleProduct = action.payload
         }
     }
 })
 
-export const { setProductList, setPlanetProductList } = productSlice.actions;
+export const { setProductList, setPlanetProductList, setSingleProduct } = productSlice.actions;
 
 export default productSlice.reducer;

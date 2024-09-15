@@ -136,7 +136,7 @@ const appRouter = createBrowserRouter([
   },
 
   {
-    path:'/product/:id',
+    path:'/product/view/:id',
     element: <ViewProductPage />
   },
 
