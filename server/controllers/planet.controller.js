@@ -1,6 +1,7 @@
 import planetModel from "../models/planet.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import productModel from "../models/product.model.js";
 
 // Add Planet
 export const addPlanet = async(req, res) => {
@@ -179,7 +180,7 @@ export const getPlanetById = async (req, res) => {
             })
         }
 
-        const planet = await planetModel.findById(id);
+        const planet = await productModel.findOne({ planet_id: id });
         if (!planet) {
             return res.status(404).json({
                 sucess: false,

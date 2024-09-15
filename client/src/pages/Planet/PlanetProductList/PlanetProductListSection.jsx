@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 const PlanetProductListSection = () => {
   const {setUser} = useSelector(store => store.planet)
   useGetProductByPlanet(setUser._id)
-  const {planetProductList} = useSelector(store => store.product)
+  const productList = useSelector(store => store.product.productListByPlanet)
   return (
     <div className='w-full h-full p-3'>
         <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>
@@ -28,22 +28,22 @@ const PlanetProductListSection = () => {
                     <TableRow>
                         <TableHead className='font-bold text-black text-left'>S.No</TableHead>
                         <TableHead className='font-bold text-black text-center'>Name</TableHead>
-                        <TableHead className='font-bold text-black text-center'>Mobile</TableHead>
-                        <TableHead className='font-bold text-black text-center'>Email</TableHead>
-                        <TableHead className='font-bold text-black text-center'>Product Count</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Price</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Quantity</TableHead>
+                        <TableHead className='font-bold text-black text-center'>category</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
                     {
-                        planetProductList && planetProductList.length > 0 ? 
+                        productList && productList.length > 0 ? 
                         (
-                            planetProductList.map((product, index) => (
+                            productList.map((product, index) => (
                                 <TableRow key={index}>
-                                    <TableCell>{index + 1}</TableCell>
-                                    <TableCell>{product.name}</TableCell>
-                                    <TableCell>{product.mobile}</TableCell>
-                                    <TableCell>{product.email}</TableCell>
-                                    <TableCell>{product.count}</TableCell>
+                                    <TableCell className='text-left'>{index + 1}</TableCell>
+                                    <TableCell className='text-center'>{product.name}</TableCell>
+                                    <TableCell className='text-center'>{product.price}</TableCell>
+                                    <TableCell className='text-center'>{product.quantity}</TableCell>
+                                    <TableCell className='text-center'>{product.category}</TableCell>
                                 </TableRow>
                             ))
                         ) : 
