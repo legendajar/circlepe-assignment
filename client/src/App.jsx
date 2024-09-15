@@ -21,6 +21,8 @@ import OrderPage from "./pages/SpaceStations/OrderPage/OrderPage";
 import ViewOrdersPage from "./pages/SpaceStations/ViewOrderPage/ViewOrderPage";
 import PlanetLogin from "./pages/Planet/PlanetLogin/PlanetLogin";
 import PlanetRegister from "./pages/Planet/PlanetRegister/PlanetRegister";
+import Login from "./pages/SpaceStations/Login/Login";
+import Register from "./pages/SpaceStations/Register/register";
 
 
 const appRouter = createBrowserRouter([
@@ -118,6 +120,16 @@ const appRouter = createBrowserRouter([
   },
 
   // Space Station Route
+  {
+    path: '/login',
+    element: <Login />
+  },
+
+  {
+    path: '/register',
+    element: <Register />
+  },
+
   {
     path: '/',
     element: <Home />

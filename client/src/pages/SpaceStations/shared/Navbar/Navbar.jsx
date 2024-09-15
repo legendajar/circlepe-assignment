@@ -1,9 +1,23 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { SPACE_STATION_API_END_POINT } from "@/utils/URLS.js"
+import axios from "axios"
 import { Power, Settings2 } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 const Navbar = () => {
+    const navigate = useNavigate()
+    const logoutHandler = async () => {
+        try {
+            const res = await axios.post(`${SPACE_STATION_API_END_POINT}/logout`, { withCredentials: true })
+            if (res.data.success) {
+                localStorage.removeItem("token")
+                navigate('/login')
+            }
+        } catch (err) {
+            console.log("Logout Error: ", err)
+        }
+    }
   return (
     <div>
         <div className='w-full h-16 bg-bodyColor'>
@@ -35,11 +49,9 @@ const Navbar = () => {
                                         </Link>
                                     </div>
                                     <div className="flex w-fit items-center gap-2 cursor-pointer group hover:text-red-500">
-                                        <Link>
-                                            <div className='flex items-center justify-center gap-4'>
-                                                <Power /> Logout
-                                            </div>
-                                        </Link>
+                                        <div onClick={logoutHandler} className='flex items-center justify-center gap-4'>
+                                            <Power /> Logout
+                                        </div>
                                     </div>
                                 </div>
                             </div>
