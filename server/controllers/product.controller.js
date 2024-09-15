@@ -2,7 +2,7 @@ import productModel from "../models/product.model.js";
 
 export const addProduct = async (req, res) => {
     try {
-        const { planet_id, name, price, quantity, description, category } = req.body
+        const { planet_id, name, price, stock, description, category } = req.body
         const file = req.file
         if (!planet_id) {
             return res.status(404).json({
@@ -14,7 +14,7 @@ export const addProduct = async (req, res) => {
             planet_id: planet_id,
             name: name,
             price: price,
-            quantity: quantity,
+            stock: stock,
             image: file.path,
             description: description,
             category: category

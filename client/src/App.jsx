@@ -23,6 +23,8 @@ import PlanetLogin from "./pages/Planet/PlanetLogin/PlanetLogin";
 import PlanetRegister from "./pages/Planet/PlanetRegister/PlanetRegister";
 import Login from "./pages/SpaceStations/Login/Login";
 import Register from "./pages/SpaceStations/Register/register";
+import Cart from "./pages/SpaceStations/Cart/Cart";
+import PlaceOrder from "./pages/SpaceStations/PlaceOrder/PlaceOrder";
 
 
 const appRouter = createBrowserRouter([
@@ -148,6 +150,16 @@ const appRouter = createBrowserRouter([
   {
     path: '/order/view/:id',
     element: <ViewOrdersPage /> 
+  },
+
+  {
+    path: '/cart',
+    element: <Cart />
+  },
+
+  {
+    path: '/order/place',
+    element: <PlaceOrder />
   }
 
 ]);

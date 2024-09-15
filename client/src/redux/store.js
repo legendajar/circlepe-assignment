@@ -17,6 +17,7 @@ import spaceStationSlice from "./spaceStationSlice.js";
 import productSlice from "./productSlice.js";
 import transactionSlice from "./transactionSlice.js";
 import orderSlice from "./orderSlice.js";
+import cartSlice from "./cartSlice.js";
 
 const persistConfig = {
     key: 'root',
@@ -30,7 +31,8 @@ const rootReducer = combineReducers({
     spaceStation: spaceStationSlice,
     product: productSlice,
     transaction: transactionSlice,
-    order: orderSlice
+    order: orderSlice,
+    cart: cartSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -55,7 +55,7 @@ const AddProductSection = () => {
         const formData = new FormData();
         formData.append("name", input.name);
         formData.append("price", input.price);
-        formData.append("quantity", input.quantity);
+        formData.append("stock", input.quantity);
         formData.append("category", input.category);
         formData.append("description", input.description);
         formData.append("file", input.file);

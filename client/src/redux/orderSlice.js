@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit"
-import planetSlice from "./planetSlice";
 
 const orderSlice = createSlice({
     name: "order",

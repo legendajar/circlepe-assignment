@@ -139,7 +139,7 @@ export const logout = async (req, res) => {
 export const getAllSpaceStation = async (req, res) => {
     try {
         const spaceStations = await spaceStationModel.find()
-        if(!spaceStations || spaceStations.length > 0) {
+        if(!spaceStations || spaceStations.length < 0) {
             return res.status(404).json({
                 success: false,
                 message: "No Space Stations Found"

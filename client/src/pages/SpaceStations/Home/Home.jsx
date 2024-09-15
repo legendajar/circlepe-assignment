@@ -11,92 +11,11 @@ import {
 } from "@/components/ui/carousel";
 import useGetAllProduct from "@/hooks/useGetAllProduct";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Home = () => {
   useGetAllProduct();
-  const products = [
-    {
-      _id: 1,
-      name: "Product 1",
-      description: "Description of Product 1",
-      price: "$19.99",
-      image:
-        "https://m.media-amazon.com/images/I/41OgB9jk9yL._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 2,
-      name: "Product 2",
-      description: "Description of Product 2",
-      price: "$29.99",
-      image:
-        "https://m.media-amazon.com/images/I/51Vyp-omj+L._SX342_SY445_.jpg",
-    },
-    {
-      _id: 3,
-      name: "Product 3",
-      description: "Description of Product 3",
-      price: "$39.99",
-      image:
-        "https://m.media-amazon.com/images/I/51nLTWR1XqL._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 4,
-      name: "Product 4",
-      description: "Description of Product 4",
-      price: "$39.99",
-      image:
-        "https://m.media-amazon.com/images/I/41sQx0KB71L._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-
-    {
-      _id: 5,
-      name: "Product 1",
-      description: "Description of Product 1",
-      price: "$19.99",
-      image:
-        "https://m.media-amazon.com/images/I/41OgB9jk9yL._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 6,
-      name: "Product 2",
-      description: "Description of Product 2",
-      price: "$29.99",
-      image:
-        "https://m.media-amazon.com/images/I/51Vyp-omj+L._SX342_SY445_.jpg",
-    },
-    {
-      _id: 7,
-      name: "Product 3",
-      description: "Description of Product 3",
-      price: "$39.99",
-      image:
-        "https://m.media-amazon.com/images/I/51nLTWR1XqL._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 8,
-      name: "Product 4",
-      description: "Description of Product 4",
-      price: "$39.99",
-      image:
-        "https://m.media-amazon.com/images/I/41sQx0KB71L._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 1,
-      name: "Product 1",
-      description: "Description of Product 1",
-      price: "$19.99",
-      image:
-        "https://m.media-amazon.com/images/I/41OgB9jk9yL._SY445_SX342_QL70_FMwebp_.jpg",
-    },
-    {
-      _id: 2,
-      name: "Product 2",
-      description: "Description of Product 2",
-      price: "$29.99",
-      image:
-        "https://m.media-amazon.com/images/I/51Vyp-omj+L._SX342_SY445_.jpg",
-    },
-  ];
+  const {productList} = useSelector(store => store.product)
   return (
     <div>
       <Navbar />
@@ -114,7 +33,7 @@ const Home = () => {
             className="w-full"
           >
             <CarouselContent>
-              {products.map((product) => (
+              {productList.map((product) => (
                 <Link to={`/product/view/${product._id}`} key={product._id} className="md:basis-1/2 lg:basis-1/3 flex-shrink-0">
                   <CarouselItem>
                     <div className="p-1">
@@ -160,7 +79,7 @@ const Home = () => {
             className="w-full"
           >
             <CarouselContent>
-              {products.map((product) => (
+              {productList.map((product) => (
                 <CarouselItem
                   key={product.id}
                   className="md:basis-1/2 lg:basis-1/3"
@@ -207,7 +126,7 @@ const Home = () => {
             className="w-full"
           >
             <CarouselContent>
-              {products.map((product) => (
+              {productList.map((product) => (
                 <CarouselItem
                   key={product.id}
                   className="md:basis-1/2 lg:basis-1/3"
