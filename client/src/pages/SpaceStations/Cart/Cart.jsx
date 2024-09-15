@@ -7,7 +7,7 @@ import {
   removeItemFromCart,
 } from "@/redux/cartSlice";
 import { Button } from "@/components/ui/button";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -38,6 +38,10 @@ const Cart = () => {
     0
   );
 
+  const navigate = useNavigate()
+  const handlePlaceOrderClick = () => {
+    navigate('/order/place');
+  };
   return (
     <div>
       <Navbar />
@@ -97,7 +101,7 @@ const Cart = () => {
           <p className="text-4xl font-extrabold mb-6">
             ${totalPrice.toFixed(2)}
           </p>
-          <button onClick={() => Navigate('/order/place')} className="w-full bg-white text-blue-600 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-gray-200 transition-all duration-300">
+          <button onClick={handlePlaceOrderClick} className="w-full bg-white text-blue-600 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-gray-200 transition-all duration-300">
             Place Order
           </button>
         </div>

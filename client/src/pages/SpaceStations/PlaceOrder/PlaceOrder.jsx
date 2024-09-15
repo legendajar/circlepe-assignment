@@ -1,33 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Navbar from '../shared/Navbar/Navbar';
+import axios from 'axios';
+import { ORDER_API_END_POINT } from '@/utils/URLS.js';
+import { useNavigate } from 'react-router-dom';
 
 const PlaceOrder = () => {
     const cartItemsFromStore = useSelector(store => store.cart.cartItems);
     const [cartItems, setCartItems] = useState(cartItemsFromStore);
     const [address, setAddress] = useState({
         name: '',
-        street: '',
+        firstLine: '',
+        secondLine: '',
         city: '',
         state: '',
         zip: '',
-        phone: ''
+        phone: '',
+        country: ''
     });
-    
+    const { user } = useSelector(store => store.spaceStation);
     const deliveryCharge = 50; // Assuming a fixed delivery charge
 
     // Calculate total price
     const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
+    const navigate = useNavigate();
+
+    // Update address state
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setAddress(prevAddress => ({ ...prevAddress, [name]: value }));
     };
 
-    const handlePlaceOrder = (e) => {
+    // Handle form submission
+    const handlePlaceOrder = async (e) => {
         e.preventDefault();
-        console.log('Order Placed', { cartItems, address, totalPrice });
-        // Logic to place order...
+
+        try {
+            const res = await axios.post(`${ORDER_API_END_POINT}/add`, {
+                name: address.name,
+                firstLine: address.firstLine,
+                secondLine: address.secondLine,
+                city: address.city,
+                state: address.state,
+                zip: address.zip,
+                mobile: address.phone,
+                country: address.country,
+                totalPrice: totalPrice,
+                deliveryCharge: deliveryCharge,
+                productList: cartItems,
+                user_id: user._id,
+                payment_method: "Cash on Delivery",
+                total_price: totalPrice,
+                delivery_location: address.city
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                withCredentials: true
+            });
+
+            if (res.data.success) {
+                window.location.href = res.data.session_url || '/';
+            }
+        } catch (err) {
+            console.log(err);
+            alert("Failed to place order. Please try again.");
+        }
     };
 
     return (
@@ -91,12 +130,20 @@ const PlaceOrder = () => {
                             />
                             <input
                                 type="text"
-                                name="street"
-                                placeholder="Street Address"
-                                value={address.street}
+                                name="firstLine"
+                                placeholder="First Line of Address"
+                                value={address.firstLine}
                                 onChange={handleInputChange}
                                 className="w-full p-2 rounded-lg border border-gray-300"
                                 required
+                            />
+                            <input
+                                type="text"
+                                name="secondLine"
+                                placeholder="Second Line of Address"
+                                value={address.secondLine}
+                                onChange={handleInputChange}
+                                className="w-full p-2 rounded-lg border border-gray-300"
                             />
                             <div className="flex gap-4">
                                 <input
@@ -128,6 +175,15 @@ const PlaceOrder = () => {
                                 required
                             />
                             <input
+                                type="text"
+                                name="country"
+                                placeholder="Country"
+                                value={address.country}
+                                onChange={handleInputChange}
+                                className="w-full p-2 rounded-lg border border-gray-300"
+                                required
+                            />
+                            <input
                                 type="tel"
                                 name="phone"
                                 placeholder="Phone Number"
@@ -148,6 +204,6 @@ const PlaceOrder = () => {
             </div>
         </div>
     );
-};
+}
 
 export default PlaceOrder;
