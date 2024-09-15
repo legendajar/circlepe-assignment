@@ -2,9 +2,9 @@ import cartModel from "../models/cart.model.js";
 
 export const addCart = async (req, res) => {
     try {
-        const { user_id, productList, price } = req.body
+        const { productId } = req.body
 
-        const requiredDetails = { user_id, productList, price }
+        const requiredDetails = { productId }
         for (const [field, value] of Object.entries(requiredDetails)) {
             if (!value) {
                 return res.status(400).json({
@@ -15,9 +15,7 @@ export const addCart = async (req, res) => {
         }
 
         const newCart = new cartModel({
-            user_id: user_id,
-            products: productList,
-            price: price
+            productId: productId
         })
 
         const savedCart = await newCart.save();
@@ -34,6 +32,28 @@ export const addCart = async (req, res) => {
         })
     }
 }
+
+export const getAllCart = async (req, res) => {
+    try {
+        const carts = await cartModel.find().populate({
+            path: 'products',
+        });
+
+        console.log('Carts:', carts); // Debugging log
+
+        return res.status(200).json({
+            success: true,
+            data: carts
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(500).json({
+            success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 
 export const viewCart = async (req, res) => {
     try {

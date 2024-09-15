@@ -32,7 +32,7 @@ export const register = async (req, res) => {
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
-        await planetModel.create({
+        await spaceStationModel.create({
             name: name,
             email: email,
             mobile: mobile,
@@ -89,7 +89,7 @@ export const login = async (req, res) => {
         }
 
         const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: '1d'});
-        user = {
+        const user = {
             _id: spaceStation._id,
             email: spaceStation.email,
             mobile: spaceStation.mobile
@@ -98,7 +98,7 @@ export const login = async (req, res) => {
         return res.status(200).cookie("token", token, {
             maxAge: 1 * 24 * 60 * 60 * 1000,
             httpOnly: true,
-            sameSite: None,
+            sameSite: "None",
             secure: process.env.NODE_ENV==='production'
         }).json({
             success: true,
@@ -116,11 +116,30 @@ export const login = async (req, res) => {
     }
 }
 
+export const logout = async (req, res) => {
+    try {
+        return res.status(200).cookie("token", "", {
+            maxAge: 0,
+            httpOnly: true,
+            sameSite: 'strict'
+        }).json({
+            success: true,
+            message: "Logout Successfully"
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
 // Get All Space Station
 export const getAllSpaceStation = async (req, res) => {
     try {
         const spaceStations = await spaceStationModel.find()
-        if(!spaceStations || spaceStations.length > 0) {
+        if(!spaceStations || spaceStations.length < 0) {
             return res.status(404).json({
                 success: false,
                 message: "No Space Stations Found"

@@ -25,16 +25,16 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
 const allowedOrigins = ['http://localhost:5173']
-
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes(origin) || !origin) {
-            callback(null, true)
+            callback(null, true);
         } else {
             callback(new Error('Not Allowed by CORS'));
         }
-    }
-}
+    },
+    credentials: true
+};
 app.use(cors(corsOptions))
 
 

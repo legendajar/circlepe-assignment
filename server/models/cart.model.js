@@ -1,14 +1,14 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const cartSchema = new mongoose.Schema({
-    spaceStation_id: { type: mongoose.Schema.Types.ObjectId, ref:'SpaceStation', required: true },
-    products: [{
-        product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-        quantity: { type: Number, required: true },
-    }],
-    quantity: { type: Number, required: true },
-    price: { type: Number, required: true },
-})
+    productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true
+    }
+});
 
-const cartModel = mongoose.model('Cart', cartSchema)
-export default cartModel
+// Ensure the model name 'Cart' is consistent across your application
+const cartModel = mongoose.model('Cart', cartSchema);
+
+export default cartModel;
