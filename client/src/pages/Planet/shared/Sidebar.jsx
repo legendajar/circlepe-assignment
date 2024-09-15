@@ -1,5 +1,5 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
-import { LayoutDashboard } from 'lucide-react'
+import { LayoutDashboard, List, Plus, ShoppingBag, ShoppingBasket } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 const Sidebar = () => {
@@ -9,7 +9,7 @@ const Sidebar = () => {
             <div className='flex flex-col items-center justify-between'>
                 <Link to='/admin/dashboard' className='w-full'>
                     <div className='border-b px-5 flex items-center gap-2 text-lg py-2 font-bold-lg group hover:bg-designColor hover:text-white'>
-                        Dashboard <LayoutDashboard />
+                        <span className='hidden md:inline'>Dashboard</span> <LayoutDashboard />
                     </div>
                 </Link>
 
@@ -18,24 +18,19 @@ const Sidebar = () => {
                     <AccordionItem value='item-1'>
                         <AccordionTrigger className='group hover:bg-designColor hover:text-black'>
                             <div className='mx-5 flex items-center gap-2'>
-                                Product 
+                                <span className='hidden md:inline'>Product</span> <ShoppingBag />
                             </div>
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
                                 <Link to='/planet/product/add' className="w-full">
                                     <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        Add Products
+                                        <span className='hidden md:inline'>Add Products</span> <Plus />
                                     </li>
                                 </Link>
                                 <Link to='/planet/product/view' className="w-full">
                                     <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        View All Products 
-                                    </li>
-                                </Link>
-                                <Link to='/admin/planet/find' className="w-full">
-                                    <li className='w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        Find Product
+                                        <span className='hidden md:inline'>View All Products</span> <List />
                                     </li>
                                 </Link>
                             </ul>
@@ -45,14 +40,14 @@ const Sidebar = () => {
                     <AccordionItem value='item-2'>
                         <AccordionTrigger className='group hover:bg-designColor hover:text-black'>
                             <div className='mx-5 flex items-center gap-2'>
-                                Orders 
+                                <span className='hidden md:inline'>Orders</span> <ShoppingBasket /> 
                             </div>
                         </AccordionTrigger>
                         <AccordionContent>
                             <ul className='my-2 flex flex-col items-center justify-center gap-1'>
                                 <Link to='/planet/product/view' className='w-full'>
                                     <li className='w-full h-10 flex items-center cursor-pointer justify-center gap-2 group hover:bg-designColor hover:text-black'>
-                                        View Orders
+                                        <span className='hidden md:inline'>View Orders</span> <List />
                                     </li>
                                 </Link>
                             </ul>

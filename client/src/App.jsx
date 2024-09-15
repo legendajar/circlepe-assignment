@@ -19,6 +19,7 @@ import Home from "./pages/SpaceStations/Home/Home";
 import ViewProductPage from "./pages/SpaceStations/ViewProductPage/ViewProductPage";
 import OrderPage from "./pages/SpaceStations/OrderPage/OrderPage";
 import ViewOrdersPage from "./pages/SpaceStations/ViewOrderPage/ViewOrderPage";
+import PlanetLogin from "./pages/Planet/PlanetLogin/PlanetLogin";
 
 
 const appRouter = createBrowserRouter([
@@ -85,6 +86,11 @@ const appRouter = createBrowserRouter([
   },
 
   // Planet Route
+  {
+    path: '/planet/login',
+    element: <PlanetLogin />
+  },
+
   {
     path: '/planet/dashboard',
     element: <Dashboard />

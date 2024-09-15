@@ -7,8 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import useGetProductByPlanet from '@/hooks/useGetProductByPlanet'
+import { useSelector } from 'react-redux'
 
 const PlanetProductListSection = () => {
+  const {setUser} = useSelector(store => store.planet)
+  useGetProductByPlanet(setUser._id)
+  const {planetProductList} = useSelector(store => store.product)
   return (
     <div className='w-full h-full p-3'>
         <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>
@@ -21,42 +26,33 @@ const PlanetProductListSection = () => {
             <Table>
                 <TableHeader>
                     <TableRow>
-                        <TableHead class>S.No</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Mobile</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Product Count</TableHead>
+                        <TableHead className='font-bold text-black text-left'>S.No</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Name</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Mobile</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Email</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Product Count</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
+                    {
+                        planetProductList && planetProductList.length > 0 ? 
+                        (
+                            planetProductList.map((product, index) => (
+                                <TableRow key={index}>
+                                    <TableCell>{index + 1}</TableCell>
+                                    <TableCell>{product.name}</TableCell>
+                                    <TableCell>{product.mobile}</TableCell>
+                                    <TableCell>{product.email}</TableCell>
+                                    <TableCell>{product.count}</TableCell>
+                                </TableRow>
+                            ))
+                        ) : 
+                        (
+                            <TableRow>
+                              <TableCell colSpan={5} className='text-center'>No Data Found </TableCell>
+                            </TableRow>
+                        )
+                    }
                 </TableBody>
             </Table>
         </div>

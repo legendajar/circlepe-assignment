@@ -32,7 +32,8 @@ export const addPlanet = async(req, res) => {
             })
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
         const newPlanet = new planetModel({
             name: name,
             mobile: mobile,
@@ -61,60 +62,86 @@ export const addPlanet = async(req, res) => {
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Check for required fields
         if (!email) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
-                message: "Email Not Found"
-            })
+                message: "Email is required"
+            });
         }
         if (!password) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
-                message: "Password Not Found"
-            })
+                message: "Password is required"
+            });
         }
-        const planet = await productModel.findOne({email: email})
-        if(planet) {
+
+        // Find the planet
+        const planet = await planetModel.findOne({ email });
+        if (!planet) {
             return res.status(404).json({
                 success: false,
                 message: "Invalid Email or Password"
-            })
+            });
         }
-        const isMatch = await bcrypt.compare(password, planet.password)
+
+        // Compare password
+        const isMatch = await bcrypt.compare(password, planet.password);
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid Email or Password"
-            })
+            });
         }
 
+        // Generate JWT token
         const tokenData = {
             planetId: planet._id
-        }
+        };
+        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: '1d' });
 
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: '1d'});
-        user = {
+        // User object to return
+        const user = {
             _id: planet._id,
             email: planet.email,
-        }
+        };
 
+        // Send response with token in cookie
         return res.status(200).cookie("token", token, {
-            maxAge: 1 * 24 * 60 * 60 * 1000,
+            maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
             httpOnly: true,
             sameSite: 'None',
-            secure: process.env.NODE_ENV==='production'
+            secure: process.env.NODE_ENV === 'production'
         }).json({
             success: true,
             message: "Login Successfully",
             user: user,
             token: token
-        })
+        });
+
     } catch (err) {
-        console.log(err)
+        console.log(err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error"
+        });
+    }
+};
+
+
+export const logout = async (req, res) => {
+    try {
+        return res.status(200).cookie("token", "" , {
+            maxAge: 0,
+            httpOnly: true,
+            sameSite: 'strict'
+        }).json({
+            success: true,
+            message: "Logout Successfully"
         })
+    } catch (err) {
+        console.log(err)
     }
 }
 

@@ -2,21 +2,20 @@ import productModel from "../models/product.model.js";
 
 export const addProduct = async (req, res) => {
     try {
-        const { id } = req.params
-        const { name, price, quantity, image, description, category } = req.body
-        if (!id) {
+        const { planet_id, name, price, quantity, description, category } = req.body
+        const file = req.file
+        if (!planet_id) {
             return res.status(404).json({
                 success: false,
                 message: "Invalid Id"
             })
         }
-
         await productModel.create({
-            planet_id: id,
+            planet_id: planet_id,
             name: name,
             price: price,
             quantity: quantity,
-            image: image,
+            image: file,
             description: description,
             category: category
         }) 
