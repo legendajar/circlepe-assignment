@@ -29,7 +29,11 @@ const Navbar = () => {
     <div>
         <div className='w-full h-16 bg-bodyColor'>
             <div className="flex justify-between items-center">
-                <h3 className='text-2xl uppercase font-bold text-designColor px-5 py-4'> InterGalatic Store </h3>
+                <h3 className='text-2xl uppercase font-bold text-designColor px-5 py-4'>
+                    <Link to='/'>
+                        InterGalatic Store 
+                    </Link>
+                </h3>
                 <div>
                     <ul className='flex items-center justify-between gap-5 text-designColor'>
                         <li className='font-lg font-bold'>Home</li>
@@ -42,12 +46,12 @@ const Navbar = () => {
                     user ? 
                     (
                         <div className='mx-5 flex items-center gap-5'>
-                            <div className="relative">
+                            <Link to='/cart' className="relative">
                                 <ShoppingCartIcon className="w-8 h-8 text-white" />
                                 <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform translate-x-1/2 -translate-y-1/2">
                                     {cartItems.length}
                                 </span>
-                            </div>
+                            </Link>
                             <Popover>
                                 <PopoverTrigger asChild>
                                     <Avatar>
@@ -78,7 +82,7 @@ const Navbar = () => {
                     (
                         <div className='mx-5 flex gap-5 items-center'>
                             <div className="relative">
-                                <Link to=''>
+                                <Link to='/cart'>
                                     <ShoppingCartIcon className="w-8 h-8 text-white" />
                                     <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform translate-x-1/2 -translate-y-1/2">
                                         {cartItems.length}

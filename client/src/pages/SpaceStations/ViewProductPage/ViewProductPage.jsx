@@ -7,16 +7,31 @@ import { clearCart, addItemToCart } from "@/redux/cartSlice";
 const ViewProductPage = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const navigate = useNavigate();
   const id = params.id;
   useGetSingleProduct(id);
   const { singleProduct } = useSelector((store) => store.product);
-  
+  const cartItems = useSelector((store) => store.cart.cartItems);
+
+  // Check if the product is already in the cart
+  const isInCart = cartItems.some((item) => item._id === singleProduct._id);
+
   const addCartHandler = (e) => {
     e.preventDefault();
 
-    
-    // Add the new product to the cart
-    dispatch(addItemToCart(singleProduct));
+    // Add the new product to the cart if not already added
+    if (!isInCart) {
+      dispatch(addItemToCart(singleProduct));
+    }
+  };
+
+  const buyNowHandler = (e) => {
+    e.preventDefault();
+
+    // Redirect to place order page, passing product details via state
+    navigate("/order/place", {
+      state: { product: singleProduct }
+    });
   };
 
   return (
@@ -40,11 +55,17 @@ const ViewProductPage = () => {
             <div className="flex gap-4">
               <button
                 onClick={addCartHandler}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                className={`px-4 py-2 rounded-lg ${
+                  isInCart ? "bg-green-500" : "bg-blue-500"
+                } text-white`}
+                disabled={isInCart} // Disable the button if the product is already in the cart
               >
-                Add to Cart
+                {isInCart ? "Added to Cart" : "Add to Cart"}
               </button>
-              <button className="bg-gray-500 text-white px-4 py-2 rounded-lg">
+              <button
+                onClick={buyNowHandler}
+                className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+              >
                 Buy Now
               </button>
             </div>
