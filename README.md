@@ -42,6 +42,32 @@ The backend system for the Intergalactic Trade Network is designed with the foll
    - **Function:** Handles user authentication and token management.
    - **Technologies:** OAuth2, JWT.
 
+
+### Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Running Tests](#running-tests)
+- [Deployment](#deployment)
+- [Contributing](#contributing)
+- [License](#license)
+
+## Prerequisites
+
+Ensure you have the following installed:
+
+- [Node.js](https://nodejs.org/) (v14.x or later)
+- [npm](https://www.npmjs.com/) (Node Package Manager)
+
+## Installation
+
+1. **Clone the Repository**
+
+   ```bash
+   git clone https://github.com/legendajar/circlepe-assignment.git
+   cd your-repo-name
+
 ### Diagram and Explanation
 
 Below is a high-level diagram showing the components of the system:
@@ -87,29 +113,6 @@ Below is a high-level diagram showing the components of the system:
 +---------------------+-------------------+
 
 
-## Table of Contents
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Running Tests](#running-tests)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Prerequisites
-
-Ensure you have the following installed:
-
-- [Node.js](https://nodejs.org/) (v14.x or later)
-- [npm](https://www.npmjs.com/) (Node Package Manager)
-
-## Installation
-
-1. **Clone the Repository**
-
-   ```bash
-   git clone https://github.com/legendajar/circlepe-assignment.git
-   cd your-repo-name
    
    
