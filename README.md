@@ -48,10 +48,9 @@ The backend system for the Intergalactic Trade Network is designed with the foll
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Running Tests](#running-tests)
-- [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
+- [Diagram](#diagramandexplanation)
 
 ## Prerequisites
 
@@ -89,6 +88,128 @@ Ensure you have the following installed:
 5. **Run Client Server**
     ```bash
     npm run dev
+
+
+## Usage
+
+### API Endpoints
+
+The Intergalactic Trade Network provides several API endpoints for interacting with the system. Below is a summary of the key endpoints:
+
+#### Trade Service
+
+- **Create a Trade Transaction**
+  - **Endpoint:** `POST /api/trades`
+  - **Description:** Initiates a new trade transaction between space stations and planets.
+  - **Request Body:**
+    ```json
+    {
+      "tradeType": "buy" | "sell",
+      "item": "item_id",
+      "quantity": "number",
+      "price": "number"
+    }
+    ```
+
+- **Get Trade History**
+  - **Endpoint:** `GET /api/trades/history`
+  - **Description:** Retrieves the history of trade transactions.
+  - **Query Parameters:**
+    - `startDate`: (Optional) Start date for filtering trades.
+    - `endDate`: (Optional) End date for filtering trades.
+
+#### Cargo Management Service
+
+- **Update Cargo Status**
+  - **Endpoint:** `POST /api/cargo/status`
+  - **Description:** Updates the status of a cargo shipment.
+  - **Request Body:**
+    ```json
+    {
+      "cargoId": "cargo_id",
+      "status": "inTransit" | "delivered" | "pending"
+    }
+    ```
+
+- **Get Cargo Details**
+  - **Endpoint:** `GET /api/cargo/:cargoId`
+  - **Description:** Retrieves details of a specific cargo shipment.
+  - **Path Parameter:**
+    - `cargoId`: The ID of the cargo to retrieve.
+
+#### Inventory Service
+
+- **Get Inventory Levels**
+  - **Endpoint:** `GET /api/inventory`
+  - **Description:** Retrieves the current inventory levels at all space stations and planets.
+  - **Query Parameters:**
+    - `location`: (Optional) Filter by location (space station or planet).
+
+- **Update Inventory**
+  - **Endpoint:** `POST /api/inventory/update`
+  - **Description:** Updates the inventory levels based on trade and cargo movements.
+  - **Request Body:**
+    ```json
+    {
+      "itemId": "item_id",
+      "quantityChange": "number",
+      "location": "space_station" | "planet"
+    }
+    ```
+
+#### Real-Time Updates
+
+- **Subscribe to Updates**
+  - **Endpoint:** `ws://yourdomain.com/ws/updates`
+  - **Description:** Establishes a WebSocket connection to receive real-time updates on trade activities, cargo status, and inventory changes.
+
+### Running the Project Locally
+
+## Contributing
+
+We welcome contributions to the Intergalactic Trade Network project! Whether you're fixing bugs, adding new features, or improving documentation, your help is greatly appreciated. Please follow these guidelines to ensure a smooth contribution process:
+
+### How to Contribute
+
+1. **Fork the Repository:**
+   - Click the "Fork" button at the top right of the repository page to create a personal copy of the repository on your GitHub account.
+
+2. **Clone Your Fork:**
+   - Clone your forked repository to your local machine:
+
+     ```bash
+     git clone https://github.com/<your-username>/intergalactic-trade-network.git
+     ```
+
+3. **Create a New Branch:**
+   - Create a new branch for your changes:
+
+     ```bash
+     git checkout -b feature/<your-feature-name>
+     ```
+
+4. **Make Your Changes:**
+   - Implement your changes or new features. Ensure that your code adheres to the project's coding style and conventions.
+
+5. **Write Tests:**
+   - Add tests to cover your changes and ensure that existing functionality remains intact.
+
+6. **Commit Your Changes:**
+   - Commit your changes with a descriptive commit
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LICENSE) file for details.
+
+### Summary
+
+The MIT License is a permissive free software license that allows for reuse, modification, and distribution of the software. Under this license, you are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software. The license also provides that the software is provided "as is," without any warranty of any kind.
+
+### Full License Text
+
+The full text of the MIT License is available in the [LICENSE](LICENSE) file in this repository. Here is a brief excerpt:
+
 
 ### Diagram and Explanation
 
