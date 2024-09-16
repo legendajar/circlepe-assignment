@@ -24,7 +24,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-const allowedOrigins = ['http://localhost:5173', 'https://circlepe-assignment-frontend.vercel.app']
+const allowedOrigins = ['http://localhost:5173', 'https://circlepe-assignment-frontend.vercel.app', 'https://intergalaticstore.online']
 const corsOptions = {
     origin: (origin, callback) => {
         if (allowedOrigins.includes(origin) || !origin) {
