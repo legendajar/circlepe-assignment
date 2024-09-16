@@ -80,7 +80,7 @@ Ensure you have the following installed:
    ```bash
    npm run dev
 
-** Client
+**Client**
 
 4. **Go to Client**
     ```bash
