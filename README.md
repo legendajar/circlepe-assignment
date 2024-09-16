@@ -50,6 +50,7 @@ The backend system for the Intergalactic Trade Network is designed with the foll
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
+- [API Documentation](#apidocumentation)
 - [Diagram](#diagramandexplanation)
 
 ## Prerequisites
@@ -206,6 +207,20 @@ This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LIC
 
 The MIT License is a permissive free software license that allows for reuse, modification, and distribution of the software. Under this license, you are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software. The license also provides that the software is provided "as is," without any warranty of any kind.
  
+## API Documentation
+
+For detailed information on the API endpoints, request and response formats, and usage examples, please refer to the API documentation:
+
+[API Documentation](https://docs.google.com/document/d/18VRV-xxdGetBioyjsAItKd4W9oW_NC9t/edit?usp=sharing&ouid=117826824827344333512&rtpof=true&sd=true)
+
+This documentation provides comprehensive details on how to interact with the intergalactic trade network system, including:
+
+- **Endpoints:** A list of available API endpoints and their functionalities.
+- **Authentication:** Information on how to authenticate API requests.
+- **Request and Response Formats:** Details on the structure of requests and responses.
+- **Examples:** Example requests and responses for various endpoints.
+
+Ensure you review the API documentation to understand how to integrate with the system effectively.
 
 
 ## Diagram and Explanation
