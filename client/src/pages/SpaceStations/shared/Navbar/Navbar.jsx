@@ -12,6 +12,7 @@ const Navbar = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { user } = useSelector(store => store.spaceStation);
+    const { cartItems } = useSelector(store => store.cart)
     const logoutHandler = async () => {
         try {
             const res = await axios.post(`${SPACE_STATION_API_END_POINT}/logout`, { withCredentials: true })
@@ -40,11 +41,11 @@ const Navbar = () => {
                 {
                     user ? 
                     (
-                        <div className='mx-5'>
+                        <div className='mx-5 flex items-center gap-5'>
                             <div className="relative">
                                 <ShoppingCartIcon className="w-8 h-8 text-white" />
                                 <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform translate-x-1/2 -translate-y-1/2">
-                                    5
+                                    {cartItems.length}
                                 </span>
                             </div>
                             <Popover>
@@ -80,7 +81,7 @@ const Navbar = () => {
                                 <Link to=''>
                                     <ShoppingCartIcon className="w-8 h-8 text-white" />
                                     <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform translate-x-1/2 -translate-y-1/2">
-                                        5
+                                        {cartItems.length}
                                     </span>
                                 </Link>
                             </div>
