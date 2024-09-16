@@ -66,7 +66,29 @@ Ensure you have the following installed:
 
    ```bash
    git clone https://github.com/legendajar/circlepe-assignment.git
-   cd your-repo-name
+   cd circlepe-assignment
+
+**Server** 
+
+2. **Go to Server**
+
+   ```bash
+   cd server
+
+3. **Run server**
+
+   ```bash
+   npm run dev
+
+** Client
+
+4. **Go to Client**
+    ```bash
+    cd client
+
+5. **Run Client Server**
+    ```bash
+    npm run dev
 
 ### Diagram and Explanation
 
