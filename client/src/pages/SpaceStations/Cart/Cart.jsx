@@ -102,7 +102,7 @@ const Cart = () => {
             ${totalPrice.toFixed(2)}
           </p>
           <button onClick={handlePlaceOrderClick} className="w-full bg-white text-blue-600 font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-gray-200 transition-all duration-300">
-            Place Order
+            Checkout
           </button>
         </div>
       </div>

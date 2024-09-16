@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Navbar from '../shared/Navbar/Navbar';
 import axios from 'axios';
 import { ORDER_API_END_POINT } from '@/utils/URLS.js';
 import { useNavigate } from 'react-router-dom';
+import { clearCart } from '@/redux/cartSlice';
 
-const PlaceOrder = () => {
+const PlaceOrder = ({ singleProduct = null }) => {
     const cartItemsFromStore = useSelector(store => store.cart.cartItems);
-    const [cartItems, setCartItems] = useState(cartItemsFromStore);
+    const [cartItems, setCartItems] = useState(singleProduct ? [singleProduct] : cartItemsFromStore);  // Use single product if it's a direct order
     const [address, setAddress] = useState({
         name: '',
         firstLine: '',
@@ -32,6 +33,8 @@ const PlaceOrder = () => {
         setAddress(prevAddress => ({ ...prevAddress, [name]: value }));
     };
 
+    const dispatch = useDispatch();
+
     // Handle form submission
     const handlePlaceOrder = async (e) => {
         e.preventDefault();
@@ -48,9 +51,9 @@ const PlaceOrder = () => {
                 country: address.country,
                 totalPrice: totalPrice,
                 deliveryCharge: deliveryCharge,
-                productList: cartItems,
+                productList: cartItems,  // Will handle cart or single product based on what's passed
                 user_id: user._id,
-                payment_method: "Cash on Delivery",
+                payment_method: "Cash on Delivery",  // You can switch this with actual payment options
                 total_price: totalPrice,
                 delivery_location: address.city
             }, {
@@ -61,6 +64,7 @@ const PlaceOrder = () => {
             });
 
             if (res.data.success) {
+                dispatch(clearCart());  // Clear cart only if it's from the cart
                 window.location.href = res.data.session_url || '/';
             }
         } catch (err) {
@@ -78,7 +82,7 @@ const PlaceOrder = () => {
                     <h1 className="text-3xl font-bold mb-6">Order Summary</h1>
                     <div className="flex flex-col gap-4">
                         {cartItems.map((item) => (
-                            <div key={item.product_id} className="flex justify-between items-center border-b-2 pb-4">
+                            <div key={item.product_id || item._id} className="flex justify-between items-center border-b-2 pb-4">
                                 <div className="flex gap-4 items-center">
                                     <img
                                         src={item.image}
