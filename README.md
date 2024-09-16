@@ -211,7 +211,7 @@ The MIT License is a permissive free software license that allows for reuse, mod
 The full text of the MIT License is available in the [LICENSE](LICENSE) file in this repository. Here is a brief excerpt:
 
 
-### Diagram and Explanation
+## Diagram and Explanation
 
 Below is a high-level diagram showing the components of the system:
 
