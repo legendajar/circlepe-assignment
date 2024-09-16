@@ -50,8 +50,8 @@ The backend system for the Intergalactic Trade Network is designed with the foll
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
-- [API Documentation](#apidocumentation)
-- [Diagram](#diagramandexplanation)
+- [API Documentation](#api-documentation)
+- [Diagram](#diagram-and-explanation)
 
 ## Prerequisites
 
