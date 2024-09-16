@@ -205,10 +205,7 @@ This project is licensed under the [MIT License](LICENSE). See the [LICENSE](LIC
 ### Summary
 
 The MIT License is a permissive free software license that allows for reuse, modification, and distribution of the software. Under this license, you are free to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software. The license also provides that the software is provided "as is," without any warranty of any kind.
-
-### Full License Text
-
-The full text of the MIT License is available in the [LICENSE](LICENSE) file in this repository. Here is a brief excerpt:
+ 
 
 
 ## Diagram and Explanation
