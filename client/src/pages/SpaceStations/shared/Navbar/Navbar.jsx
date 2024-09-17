@@ -125,7 +125,7 @@ const Navbar = () => {
                     <div className="flex gap-4 space-y-2">
                       <div className="flex flex-col gap-5 text-gray-600">
                         <div className="flex w-fit items-center gap-2 cursor-pointer group hover:text-designColor">
-                          <Link>
+                          <Link to={`/spacestation/profile/${user._id}`}>
                             <div className="flex items-center justify-center gap-4 text-white hover:text-designColor">
                               <Settings2 /> Profile
                             </div>

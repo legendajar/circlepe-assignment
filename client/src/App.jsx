@@ -27,6 +27,7 @@ import Cart from "./pages/SpaceStations/Cart/Cart";
 import PlaceOrder from "./pages/SpaceStations/PlaceOrder/PlaceOrder";
 import Verify from "./pages/SpaceStations/Verify/Verify";
 import RatingProduct from "./pages/SpaceStations/RatingProduct/RatingProduct";
+import ProfilePage from "./pages/SpaceStations/ProfilePage/ProfilePage";
 
 
 const appRouter = createBrowserRouter([
@@ -172,6 +173,11 @@ const appRouter = createBrowserRouter([
   {
     path:'/product/rating/add/:id',
     element: <RatingProduct />
+  },
+
+  {
+    path: '/spacestation/profile/:id',
+    element: <ProfilePage />
   }
 
 ]);
