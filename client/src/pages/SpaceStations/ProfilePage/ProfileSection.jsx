@@ -1,6 +1,8 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const ProfileSection = () => {
+const ProfileSection = () => { 
+    const { user } = useSelector(store => store.spaceStation)
   return (
     <div className="flex flex-col md:flex-row items-center md:items-start p-6 bg-white w-full max-w-4xl mx-auto">
       {/* Profile Photo */}
@@ -14,9 +16,9 @@ const ProfileSection = () => {
 
       {/* User Info */}
       <div className="text-left">
-        <h2 className="text-3xl font-semibold mb-4">John Doe</h2>
-        <p className="text-gray-600 mb-2"><strong>Mobile:</strong> +12 345678910</p>
-        <p className="text-gray-600 mb-2"><strong>Email:</strong> harshsolanki9898@gmail.com</p>
+        <h2 className="text-3xl font-semibold mb-4">{user.name}</h2>
+        <p className="text-gray-600 mb-2"><strong>Mobile:</strong> {user.mobile}</p>
+        <p className="text-gray-600 mb-2"><strong>Email:</strong> {user.email}</p>
       </div>
     </div>
   )
