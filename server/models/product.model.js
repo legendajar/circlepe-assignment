@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     description: { type: String, required: true },
     category: { type: String, required: true },
     ratings: [{
-        userId: { type: String },
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'SpaceStation' },
         rating: { type: Number },
         comment: { type: String }
     }]

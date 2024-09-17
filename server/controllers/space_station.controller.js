@@ -54,67 +54,74 @@ export const register = async (req, res) => {
 // Login Space Station
 export const login = async (req, res) => {
     try {
-        const {email, password} = req.body
+        const { email, password } = req.body;
+
+        // Validate input
         if (!email) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: "Email is required"
-            })
+            });
         }
         if (!password) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: "Password is required"
-            })
+            });
         }
 
-        let spaceStation = await spaceStationModel.findOne({ email: email })
+        // Find user by email
+        let spaceStation = await spaceStationModel.findOne({ email });
         if (!spaceStation) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: "Invalid Credentials"
-            })
+            });
         }
 
-        const isMatch = await bcrypt.compare(password, spaceStation.password)
+        // Check password
+        const isMatch = await bcrypt.compare(password, spaceStation.password);
         if (!isMatch) {
-            return res.status(404).json({
+            return res.status(400).json({
                 success: false,
                 message: "Invalid Credentials"
-            })
+            });
         }
 
+        // Generate JWT token
         const tokenData = {
             userId: spaceStation._id
-        }
+        };
 
-        const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {expiresIn: '1d'});
+        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: '1d' });
+
+        // User info to send in response
         const user = {
             _id: spaceStation._id,
             email: spaceStation.email,
             mobile: spaceStation.mobile
-        }
+        };
 
+        // Send response with token in cookie
         return res.status(200).cookie("token", token, {
-            maxAge: 1 * 24 * 60 * 60 * 1000,
+            maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
             httpOnly: true,
-            sameSite: "None",
-            secure: process.env.NODE_ENV==='production'
+            sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+            secure: process.env.NODE_ENV === 'production'
         }).json({
             success: true,
             message: "Space Station Login Successfully",
-            user: user,
-            token: token
-
-        })
+            user,
+            token
+        });
     } catch (err) {
-        console.log(err)
+        console.error(err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error"
-        })
+        });
     }
-}
+};
 
 export const logout = async (req, res) => {
     try {
