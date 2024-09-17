@@ -5,7 +5,7 @@ import isAuthenticated from '../middlewares/isAuthenticated.js'
 
 const ProductRoute = express.Router()
 
-ProductRoute.post('/add', productImageUploader, addProduct)
+ProductRoute.post('/add', isAuthenticated, productImageUploader, addProduct)
 ProductRoute.get('/get/all', getProducts)
 ProductRoute.get('/get/:id', getProductsByID)
 ProductRoute.get('/get/planet/:id', getProductsByPlanet)

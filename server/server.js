@@ -6,7 +6,6 @@ import AdminRoute from './routes/admin.route.js'
 import PlanetRoute from './routes/planet.controller.js'
 import SpaceStationRoute from './routes/spaceStation.route.js'
 import OrderRoute from './routes/order.route.js'
-import CartRoute from './routes/cart.route.js'
 import ProductRoute from './routes/product.route.js'
 import TransactionRoute from './routes/transaction.route.js'
 import { connectDB } from './db/db.config.js'
@@ -50,7 +49,6 @@ app.use('/api/admin', AdminRoute)
 app.use('/api/planet', PlanetRoute)
 app.use('/api/spaceStation', SpaceStationRoute)
 app.use('/api/order', OrderRoute)
-app.use('/api/cart', CartRoute)
 app.use('/api/product', ProductRoute)
 app.use('/api/transaction', TransactionRoute)
 

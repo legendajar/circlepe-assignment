@@ -1,14 +1,16 @@
 import orderModel from "../models/order.model.js";
 import stripe from 'stripe'; // Make sure to import and configure Stripe
 import dotenv from 'dotenv'
+import mongoose from 'mongoose'
+import SpaceStationRoute from "../routes/spaceStation.route.js";
 
 dotenv.config()
 
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY); // Replace with your Stripe secret key
 
 export const addOrder = async (req, res) => {
-    const frontendUrl = "http://localhost:5173";
-    
+    const spaceStationId = req.id
+    const frontendUrl = 'http://localhost:5173'
     try {
         // Destructure the request body
         const { 
@@ -21,7 +23,6 @@ export const addOrder = async (req, res) => {
             state, 
             country, 
             zip, 
-            user_id, 
             total_price, 
             payment_method 
         } = req.body;
@@ -38,7 +39,6 @@ export const addOrder = async (req, res) => {
             state, 
             country, 
             zip, 
-            user_id, 
             total_price, 
             payment_method 
         };
@@ -60,18 +60,18 @@ export const addOrder = async (req, res) => {
                 product_price: item.price
             })),
             address: {
-                name,
-                firstLine,
-                secondLine,
-                city,
-                state,
-                country,
+                name: name,
+                mobile: mobile,
+                firstLine: firstLine,
+                secondLine: secondLine,
+                city: city,
+                state: state,
+                country: country,
                 pincode: zip,
-                mobile
             },
-            user_id,
-            total_price,
-            payment_method
+            user_id: new mongoose.Types.ObjectId(spaceStationId),
+            total_price: total_price,
+            payment_method: payment_method
         });
 
         // Create Stripe Checkout session

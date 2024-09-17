@@ -112,6 +112,16 @@ const Navbar = () => {
           <div className="md:block hidden">
             {user ? (
               <div className="mx-5 flex items-center gap-5">
+              <div className="flex">
+              <div className="relative">
+                <Link to="/cart">
+                  <ShoppingCartIcon className="w-8 h-8 text-white" />
+                  <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold transform translate-x-1/2 -translate-y-1/2">
+                    {cartItems.length}
+                  </span>
+                </Link>
+              </div>
+            </div>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Avatar>
