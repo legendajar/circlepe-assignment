@@ -126,7 +126,7 @@ const Navbar = () => {
                   <PopoverTrigger asChild>
                     <Avatar>
                       <AvatarImage
-                        src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80"
+                        src={user.image}
                         alt="Avatar Image"
                       />
                     </Avatar>

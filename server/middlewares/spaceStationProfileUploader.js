@@ -2,17 +2,18 @@ import multer from 'multer'
 import cloudinary from '../utils/cloudinary.js'
 import { CloudinaryStorage } from 'multer-storage-cloudinary'
 
-const productImageStorage = new CloudinaryStorage({
+
+const spaceStationProfileImageStorage = new CloudinaryStorage ({
     cloudinary: cloudinary,
     params: async (req, file) => {
         return {
-            folder: 'Intergalatic-ecom/products',
+            folder: 'Intergalatic-ecom/space-stations',
             allowed_formats: ['jpg', 'jpeg', 'png'],
             public_id: file.originalname
         }
     }
 });
 
-const productImageUploader = multer({ storage: productImageStorage }).single("file");
+const spaceStationProfileImageUploader = multer({ storage: spaceStationProfileImageStorage }).single("file");
 
-export default productImageUploader;
+export default spaceStationProfileImageUploader;

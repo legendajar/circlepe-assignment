@@ -123,10 +123,12 @@ export const login = async (req, res) => {
       // User info to send in response
       const user = {
         _id: newSpaceStation._id,
+        name: newSpaceStation.name,
         email: newSpaceStation.email,
         mobile: newSpaceStation.mobile,
         address: newSpaceStation.address,
         device_details: newSpaceStation.device_details,
+        image: newSpaceStation.image,
         last_login: newSpaceStation.last_login,
       };
   
@@ -234,18 +236,16 @@ export const getSpaceStationById = async (req, res) => {
 
 // Update Space Station
 export const updateSpaceStation = async (req, res) => {
-  const { id } = req.params;
-  const {
-    name,
-    email,
-    mobile,
-    image,
-    address,
-    addressAction,
-    addressIndex,
-    newAddress,
-  } = req.body;
+  // Correct way to access id from req
+  const id = req.id;
 
+  // Destructure the fields from request body
+  const { name, email, mobile } = req.body;
+
+  // File handling
+  const image = req.file;
+
+  // Check if ID is provided
   if (!id) {
     return res.status(404).json({
       success: false,
@@ -262,60 +262,51 @@ export const updateSpaceStation = async (req, res) => {
     });
   }
 
-  // Handle address-related operations based on addressAction
-  if (addressAction) {
-    // Adding a new address
-    if (addressAction === "add" && newAddress) {
-      spaceStation.address.push(newAddress);
-    }
-
-    // Updating an existing address by index
-    else if (addressAction === "update" && addressIndex >= 0 && newAddress) {
-      if (spaceStation.address[addressIndex]) {
-        spaceStation.address[addressIndex] = newAddress;
-      } else {
-        return res.status(404).json({
-          success: false,
-          message: "Address not found at the specified index",
-        });
-      }
-    }
-
-    // Deleting an address by index
-    else if (addressAction === "delete" && addressIndex >= 0) {
-      if (spaceStation.address[addressIndex]) {
-        spaceStation.address.splice(addressIndex, 1); // Remove the address at the specified index
-      } else {
-        return res.status(404).json({
-          success: false,
-          message: "Address not found at the specified index",
-        });
-      }
-    }
-  }
-
-  // Updating other fields (name, email, mobile, etc.)
+  // Updating fields with either new values or keeping existing ones
   const updatedData = {
     name: name || spaceStation.name,
     email: email || spaceStation.email,
     mobile: mobile || spaceStation.mobile,
-    image: image || spaceStation.image,
-    address: spaceStation.address, // Use the updated address array
+    image: image ? image.path : spaceStation.image.path, // Check if image exists before accessing path
   };
 
   // Save the updated space station
-  const updatedSpaceStation = await spaceStationModel.findByIdAndUpdate(
-    id,
-    updatedData,
-    { new: true }
-  );
+  try {
+    const updatedSpaceStation = await spaceStationModel.findByIdAndUpdate(
+      id,
+      updatedData,
+      { new: true } // Returns the updated document
+    );
 
-  return res.status(200).json({
-    success: true,
-    message: "Space Station Updated Successfully",
-    data: updatedSpaceStation,
-  });
+    const updatedSpaceStationData = await spaceStationModel.findById(id)
+
+    const updateduserData = {
+        _id: updatedSpaceStationData._id,
+        name: updatedSpaceStationData.name,
+        email: updatedSpaceStationData.email,
+        mobile: updatedSpaceStationData.mobile,
+        address: updatedSpaceStationData.address,
+        device_details: updatedSpaceStationData.device_details,
+        image: updatedSpaceStationData.image,
+        last_login: updatedSpaceStationData.last_login,
+    }
+
+    // Return the updated space station
+    return res.status(200).json({
+      success: true,
+      message: "Space Station Updated Successfully",
+      user: updateduserData,
+    });
+  } catch (error) {
+    // Handle any errors during the update process
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the space station",
+      error: error.message,
+    });
+  }
 };
+
 
 // Delete Space Station
 export const deleteSpaceStation = async (req, res) => {

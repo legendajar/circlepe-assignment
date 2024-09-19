@@ -8,7 +8,7 @@ const ProfileSection = () => {
       {/* Profile Photo */}
       <div className="mb-4 md:mb-0 md:mr-8">
         <img 
-          src="https://media.licdn.com/dms/image/v2/D5635AQEXXyMIc-erjw/profile-framedphoto-shrink_400_400/profile-framedphoto-shrink_400_400/0/1721546990642?e=1727204400&v=beta&t=NPoDQDG1EbwrsdedWFJxHgmjETldB8QVJuWwIx2G-Eo" 
+          src={user.image} 
           alt="User Profile" 
           className="w-40 h-40 object-cover rounded-lg"
         />
