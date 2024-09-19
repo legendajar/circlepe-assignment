@@ -8,13 +8,13 @@ const spaceStationSchema = new mongoose.Schema({
     image: { type: String },
     address: [{
         name: {type: String, required: true},
-        mobile: {type: Number, required: true},
+        mobile: {type: String, required: true},
         firstLine: {type: String, required: true},
         secondLine: {type: String, required: true},
         city: {type: String, required: true},
         state: {type: String, required: true},
         country: {type: String, required: true},
-        pincode: {type: Number, required: true}
+        pincode: {type: String, required: true}
     }],
     device_details: [{
         device_os: { type: String },

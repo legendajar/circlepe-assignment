@@ -418,3 +418,47 @@ export const changePassword = async (req, res) => {
     })
   }
 }
+
+export const addAddress = async (req, res) => {
+  try {
+    const spaceStationId = req.id;
+    const { name, mobile, firstLine, secondLine, city, state, country, pincode } = req.body
+
+    if (!spaceStationId) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+
+    if (!name || !mobile || !firstLine || !city || !state || !country || !pincode) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      })
+    }
+
+    const spaceStation = await spaceStationModel.findById(spaceStationId)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    spaceStation.address.push({ name, mobile, firstLine, secondLine, city, state, country, pincode })
+
+    await spaceStation.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "Address added successfully"
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
