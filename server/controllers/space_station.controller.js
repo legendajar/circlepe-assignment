@@ -119,11 +119,15 @@ export const login = async (req, res) => {
         expiresIn: "1d",
       });
   
+      const newSpaceStation = await spaceStationModel.findOne({email: email})
       // User info to send in response
       const user = {
-        _id: spaceStation._id,
-        email: spaceStation.email,
-        mobile: spaceStation.mobile,
+        _id: newSpaceStation._id,
+        email: newSpaceStation.email,
+        mobile: newSpaceStation.mobile,
+        address: newSpaceStation.address,
+        device_details: newSpaceStation.device_details,
+        last_login: newSpaceStation.last_login,
       };
   
       // Send response with token in cookie
@@ -345,3 +349,72 @@ export const deleteSpaceStation = async (req, res) => {
     });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  try {
+    const id = req.id;
+    const { oldPassword, newPassword, confirmNewPassword } = req.body
+
+    if(!id){
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+
+    if (!oldPassword ||!newPassword ||!confirmNewPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      })
+    }
+
+
+    const spaceStation = await spaceStationModel.findById(id)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    const isMatch = await bcrypt.compare(oldPassword, spaceStation.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Password",
+      });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(300).json({
+        success: false,
+        message: "Passwords and Confirm Password Doesn't Match",
+      });
+    }
+
+    if (oldPassword === newPassword) {
+      return res.status(300).json({
+        success: false,
+        message: "New password must be different from old password"
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+    spaceStation.password = hashedPassword;
+    await spaceStation.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "Password changed successfully"
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}

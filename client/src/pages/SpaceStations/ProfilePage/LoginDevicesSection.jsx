@@ -1,26 +1,7 @@
-import React from 'react'
+import { useSelector } from 'react-redux';
 
 const LoginDevicesSection = () => {
-  const devices = [
-    {
-      deviceName: 'MacBook Pro',
-      os: 'macOS 13.2',
-      ipAddress: '192.168.0.15',
-      location: 'New York, USA',
-    },
-    {
-      deviceName: 'iPhone 12',
-      os: 'iOS 16.4',
-      ipAddress: '192.168.0.100',
-      location: 'Los Angeles, USA',
-    },
-    {
-      deviceName: 'Windows PC',
-      os: 'Windows 11',
-      ipAddress: '192.168.0.22',
-      location: 'San Francisco, USA',
-    },
-  ];
+  const devices = useSelector(store => store.spaceStation.user.device_details)
   return (
     <div className="flex flex-col gap-4 p-4">
         {devices.map((device, index) => (
@@ -29,19 +10,19 @@ const LoginDevicesSection = () => {
                 <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
                         <span className="font-medium text-gray-600">OS:</span>
-                        <span className="text-gray-800">{device.os}</span>
+                        <span className="text-gray-800">{device.device_os}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium text-gray-600">IP Address:</span>
-                        <span className="text-gray-800">{device.ipAddress}</span>
+                        <span className="text-gray-800">{device.device_ipAddress}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium text-gray-600">Location:</span>
-                        <span className="text-gray-800">{device.location}</span>
+                        <span className="text-gray-800">{device.device_location}</span>
                     </div>
                     <div className="flex justify-between">
                         <span className="font-medium text-gray-600">Device Name:</span>
-                        <span className="text-gray-800">{device.deviceName}</span>
+                        <span className="text-gray-800">{device.device_name}</span>
                     </div>
                 </div>
             </div>

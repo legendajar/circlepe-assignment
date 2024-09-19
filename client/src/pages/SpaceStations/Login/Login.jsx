@@ -44,7 +44,8 @@ const Login = () => {
 
       // Get location by IP
       const locationRes = await getLocationByIp(ip);
-      const location = `${locationRes.city}, ${locationRes.region}`;
+      console.log(locationRes)
+      const location = `${locationRes.data.city}, ${locationRes.data.region}, ${locationRes.data.country}`;
 
       const formData = new FormData();
       formData.append("email", input.email);
