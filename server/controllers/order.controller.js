@@ -9,8 +9,9 @@ dotenv.config()
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY); // Replace with your Stripe secret key
 
 export const addOrder = async (req, res) => {
-    const spaceStationId = req.id
-    const frontendUrl = 'http://localhost:5173'
+    const spaceStationId = req.id;
+    const frontendUrl = 'http://localhost:5173';
+
     try {
         // Destructure the request body
         const { 
@@ -26,7 +27,6 @@ export const addOrder = async (req, res) => {
             total_price, 
             payment_method 
         } = req.body;
-
 
         // Validate required fields
         const requiredDetails = { 
@@ -57,21 +57,25 @@ export const addOrder = async (req, res) => {
             product: productList.map(item => ({
                 product_id: item._id,
                 quantity: item.quantity,
-                product_price: item.price
+                product_price: item.price,
+                expected_delivery_date: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+                delivery_status: [{
+                    city: "Pending",
+                }]
             })),
             address: {
-                name: name,
-                mobile: mobile,
-                firstLine: firstLine,
-                secondLine: secondLine,
-                city: city,
-                state: state,
-                country: country,
+                name,
+                mobile,
+                firstLine,
+                secondLine,
+                city,
+                state,
+                country,
                 pincode: zip,
             },
-            user_id: new mongoose.Types.ObjectId(spaceStationId),
-            total_price: total_price,
-            payment_method: payment_method
+            user_id: spaceStationId,  // Assuming spaceStationId is already ObjectId
+            total_price,
+            payment_method
         });
 
         // Create Stripe Checkout session
@@ -104,7 +108,6 @@ export const addOrder = async (req, res) => {
             cancel_url: `${frontendUrl}/verify?success=false&orderId=${newOrder._id}`,
         });
 
-
         // Update the order with Stripe session ID and status
         await orderModel.findByIdAndUpdate(newOrder._id, {
             transaction_id: session.id,
@@ -125,6 +128,7 @@ export const addOrder = async (req, res) => {
         });
     }
 };
+
 
 export const verifyOrder = async (req, res) => {
     const { success, orderId } = req.body;
@@ -205,7 +209,7 @@ export const getOrder = async (req, res) => {
 
 export const getOrderByUserId = async (req, res) => {
     try {
-        const {id} = req.params;
+        const id = req.id;
         if (!id) {
             return res.status(404).json({
                 success: false,
@@ -213,7 +217,11 @@ export const getOrderByUserId = async (req, res) => {
             })
         }
 
-        const order = await orderModel.find({user_id: id});
+        const order = await orderModel
+        .find({user_id: id})
+        .populate({ path: 'user_id'})
+        .populate({ path: 'product.product_id'})
+        .exec();
         if (!order) {
             return res.status(404).json({
                 success: false,

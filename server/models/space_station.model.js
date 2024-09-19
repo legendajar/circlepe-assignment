@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
 const spaceStationSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -18,15 +18,17 @@ const spaceStationSchema = new mongoose.Schema({
     }],
     device_details: [{
         device_os: { type: String },
-        device_ipAddress: { type: Number },
-        device_browser: { type: String },
+        device_ipAddress: { type: String }, // Changed from Number to String
         device_location: { type: String },
         device_name: { type: String }
     }],
-    last_login: {type: Date, default: Date.now()},
+    last_login: [{
+        ip: { type: String },
+        time: { type: Date, default: Date.now }
+    }],
     reset_password: { type: Number },
     reset_password_time: { type: Date },
-}, {timestamps: true});
+}, { timestamps: true });
 
 const spaceStationModel = mongoose.model("SpaceStation", spaceStationSchema);
 

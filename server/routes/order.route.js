@@ -7,6 +7,6 @@ const OrderRoute = express.Router()
 OrderRoute.post('/add', isAuthenticated, addOrder)
 OrderRoute.post('/verify', verifyOrder)
 OrderRoute.get('/get/all', getOrder)
-OrderRoute.get('/get/:id', getOrderByUserId)
+OrderRoute.get('/get/:id', isAuthenticated, getOrderByUserId)
 
 export default OrderRoute

@@ -1,62 +1,104 @@
+import useGetOrderBySpaceStation from "@/hooks/useGetOrderBySpaceStation";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const OrderSection = () => {
   const { user } = useSelector((store) => store.spaceStation);
+  useGetOrderBySpaceStation(user._id);
+  const orderList = useSelector((store) => store.order.orderListSpaceStation);
   const navigate = useNavigate();
   const shopButtonHandler = () => {
     navigate("/");
-  }
+  };
   return (
     <div>
-      {user.orders && user.orders.length > 0 ? (
-        user.orders.map((order, index) => (
-          <div className="p-6 bg-white shadow-md rounded-md w-full mx-auto mb-6" key={index}>
-            {/* Order Header */}
+      {orderList && orderList.length > 0 ? (
+        orderList.map((order, index) => (
+          <div
+            className="order-item p-6 bg-white shadow-md rounded-md w-full mx-auto mb-6"
+            key={index}
+          >
             <div className="flex justify-between items-center mb-4">
               <div>
-                <h2 className="text-xl font-semibold">Order: {order._id}</h2>
-                <p className="text-gray-600">Order Date: 25/09/2023</p>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-gray-600">
-                  Expected Delivery: 24/09/2024
+                <h2 className="text-xl font-semibold">Order ID: {order._id}</h2>
+                <p className="text-gray-600">
+                  Order Date: {new Date(order.order_date).toLocaleDateString()}
                 </p>
-                <p className="text-green-600">Delivered</p>
               </div>
             </div>
 
-            {/* Order Details */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col">
-                <span className="text-gray-500">Product Name</span>
-                <span className="text-lg font-medium">ABCD</span>
-              </div>
+            <div className="border-t border-gray-200 pt-4">
+              <h3 className="text-lg font-semibold">Shipping Address:</h3>
+              <p className="text-gray-700">
+                {order.address.name} <br />
+                {order.address.firstLine}, {order.address.secondLine},{" "}
+                {order.address.city}, <br />
+                {order.address.state}, {order.address.country} -{" "}
+                {order.address.pincode} <br />
+                Mobile: {order.address.mobile}
+              </p>
+            </div>
 
-              <div className="flex flex-col">
-                <span className="text-gray-500">Order Price</span>
-                <span className="text-lg font-medium">$ 500</span>
-              </div>
+            <div className="product-list mt-6">
+              <h3 className="text-lg font-semibold">Products:</h3>
 
-              <div className="flex flex-col">
-                <span className="text-gray-500">Current Location</span>
-                <span className="text-lg font-medium">Etawah</span>
-              </div>
+              {/* Loop through each product */}
+              {order.product.map((product, prodIndex) => (
+                <div
+                  className="flex items-center p-4 border-b border-gray-200 transition-shadow duration-200 hover:shadow-xl"
+                  key={prodIndex}
+                >
+                  <div className="w-full flex items-center bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg p-4 shadow-md transition-transform duration-200 transform hover:scale-105">
+                    {/* Product Image (Passport Size) */}
+                    <div className="w-1/4 flex justify-center">
+                      <img
+                        src={product.product_id.image}
+                        alt={product.product_id.name}
+                        className="w-24 h-24 object-cover rounded-lg border-2 border-blue-300 shadow-lg transition-transform duration-200 transform hover:scale-110"
+                      />
+                    </div>
 
-              <div className="flex flex-col">
-                <span className="text-gray-500">Delivery Status</span>
-                <span className="text-green-600">Delivered</span>
-              </div>
-              <div className="flex flex-col">
-                <span className="text-gray-500">Payment Type</span>
-                <span className="text-lg font-medium">COD</span>
-              </div>
+                    {/* Product Info */}
+                    <div className="ml-6 w-3/4">
+                      <p className="text-xl font-bold text-gray-800 hover:text-blue-600 transition-colors duration-200">
+                        {product.product_id.name}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-semibold">Quantity:</span>{" "}
+                        {product.quantity}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-semibold">Price:</span> $
+                        {product.product_price}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-semibold">Order Status:</span>{" "}
+                        {product.order_status}
+                      </p>
+                      <p className="text-gray-700">
+                        <span className="font-semibold">
+                          Expected Delivery:
+                        </span>{" "}
+                        {new Date(
+                          product.expected_delivery_date
+                        ).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
 
-              <div className="flex flex-col">
-                <span className="text-gray-500">Payment Status</span>
-                <span className="text-green-600">Payment Done</span>
-              </div>
+            <div className="order-summary mt-6">
+              <h3 className="text-lg font-semibold">Order Summary:</h3>
+              <p className="text-gray-700">Total Price: ${order.total_price}</p>
+              <p className="text-gray-700">
+                Payment Method: {order.payment_method}
+              </p>
+              <p className="text-gray-700">
+                Transaction ID: {order.transaction_id}
+              </p>
             </div>
           </div>
         ))

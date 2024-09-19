@@ -4,7 +4,7 @@ const orderSlice = createSlice({
     name: "order",
     initialState: {
         orderList: [],
-        planetOrderList: []
+        orderListSpaceStation: []
     },
 
     reducers: {
@@ -12,12 +12,12 @@ const orderSlice = createSlice({
             state.orderList = action.payload
         },
 
-        setPlanetOrderList: (state, action) => {
-            state.planetOrderList = action.payload
+        setOrderListSpaceStation: (state, action) => {
+            state.orderListSpaceStation = action.payload
         }
     }
 })
 
-export const { setOrderList, setPlanetOrderList } = orderSlice.actions;
+export const { setOrderList, setOrderListSpaceStation } = orderSlice.actions;
 
 export default orderSlice.reducer;
