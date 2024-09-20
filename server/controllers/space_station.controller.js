@@ -1,7 +1,7 @@
 import spaceStationModel from "../models/space_station.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import generateOTP from "../utils/OTP_Gen.jsx";
+import generateOTP from "../utils/OTP_Gen.js";
 
 // Register or Add Space Station
 export const register = async (req, res) => {
@@ -475,7 +475,7 @@ export const forgotPassword = async (req, res) => {
         })
       }
   
-      const token = jwt.sign({ _id: spaceStation._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: "1d" })
+      const token = jwt.sign({ userId: spaceStation._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: "1d" })
 
       const otp = generateOTP()
       console.log(`Your password to reset password is: ${otp}`)
@@ -506,8 +506,8 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPasswordOTPVerification = async (req, res) => {
   try {
-    const { id } = req.id;
-    const { otp } = req.body
+    const id  = req.id;
+    const otp = Number(req.body.otp)
 
     if(!id){
       return res.status(400).json({
@@ -519,6 +519,7 @@ export const resetPasswordOTPVerification = async (req, res) => {
     if (!otp) {
       return res.status(400).json({
         success: false,
+        message: "Invalid OTP"
       })
     }
 
@@ -601,7 +602,7 @@ export const resendOTP = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { id } = req.id
+    const id = req.id
     const {newPassword, confirmPassword} = req.body
     if(!id) {
       return res.status(400).json({
@@ -636,6 +637,7 @@ export const resetPassword = async (req, res) => {
     const password = await bcrypt.hash(newPassword, salt)
 
     spaceStation.password = password
+    spaceStation.reset_password_status = false
 
     await spaceStation.save()
 

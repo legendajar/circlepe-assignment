@@ -131,7 +131,7 @@ const Login = () => {
             </Link>
           </p>
           <p className="text-gray-600 text-sm mt-2">
-            <Link to="/reset-password" className="text-indigo-600 hover:text-indigo-800">
+            <Link to="/spacestation/reset/password" className="text-indigo-600 hover:text-indigo-800">
               Forgot password? Reset it here
             </Link>
           </p>

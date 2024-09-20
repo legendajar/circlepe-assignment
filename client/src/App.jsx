@@ -28,6 +28,8 @@ import PlaceOrder from "./pages/SpaceStations/PlaceOrder/PlaceOrder";
 import Verify from "./pages/SpaceStations/Verify/Verify";
 import RatingProduct from "./pages/SpaceStations/RatingProduct/RatingProduct";
 import ProfilePage from "./pages/SpaceStations/ProfilePage/ProfilePage";
+import ResetPassword from "./pages/SpaceStations/ResetPassword/ResetPassword";
+import ResetPasswordForm from "./pages/SpaceStations/ResetPassword/ResetPasswordForm";
 
 
 const appRouter = createBrowserRouter([
@@ -178,6 +180,16 @@ const appRouter = createBrowserRouter([
   {
     path: '/spacestation/profile/:id',
     element: <ProfilePage />
+  },
+
+  {
+    path: '/spacestation/reset/password',
+    element: <ResetPassword />
+  },
+
+  {
+    path: '/spacestation/reset/password/form',
+    element: <ResetPasswordForm />
   }
 
 ]);
