@@ -455,7 +455,6 @@ export const addAddress = async (req, res) => {
   }
 }
 
-
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body
@@ -563,7 +562,7 @@ export const resetPasswordOTPVerification = async (req, res) => {
 
 export const resendOTP = async (req, res) => {
   try {
-    const { id } = req.id
+    const id = req.id
     if(!id) {
       return res.status(400).json({
         success: false,
@@ -598,7 +597,6 @@ export const resendOTP = async (req, res) => {
     })
   }
 }
-
 
 export const resetPassword = async (req, res) => {
   try {

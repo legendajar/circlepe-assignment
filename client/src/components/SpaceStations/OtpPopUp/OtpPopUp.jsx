@@ -46,7 +46,7 @@ const OtpPopUp = ({ show, closePopup }) => {
     e.preventDefault();
     // Optionally, add resend OTP logic here
     try {
-        const res = await axios.post(`${SPACE_STATION_API_END_POINT}/reset/password/otp/resend`, {withCredentials: true})
+        const res = await axios.post(`${SPACE_STATION_API_END_POINT}/reset/password/otp/resend`, {}, {withCredentials: true})
         if (res.data.success) {
             alert(res.data.message)
         } else {
