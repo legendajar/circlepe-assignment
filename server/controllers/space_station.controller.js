@@ -1,6 +1,7 @@
 import spaceStationModel from "../models/space_station.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import generateOTP from "../utils/OTP_Gen.jsx";
 
 // Register or Add Space Station
 export const register = async (req, res) => {
@@ -445,6 +446,211 @@ export const addAddress = async (req, res) => {
       success: true,
       message: "Address added successfully"
     })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
+
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body
+      
+      if (!email) {
+        return res.status(400).json({
+          success: false,
+          message: "Email is required"
+        })
+      }
+  
+      const spaceStation = await spaceStationModel.findOne({ email })
+      if (!spaceStation) {
+        return res.status(404).json({
+          success: false,
+          message: "Space Station Not Found"
+        })
+      }
+  
+      const token = jwt.sign({ _id: spaceStation._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: "1d" })
+
+      const otp = generateOTP()
+      console.log(`Your password to reset password is: ${otp}`)
+  
+      spaceStation.reset_password = otp
+      spaceStation.reset_password_time = Date.now() + 10 * 60 * 1000
+  
+      await spaceStation.save()
+  
+      return res.status(200).cookie("resetPasswordToken", token, {
+        maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        secure: process.env.NODE_ENV === "production",
+      }).json({
+        success: true,
+        message: "OTP to reset the password has been sent to link"
+      })
+
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
+
+export const resetPasswordOTPVerification = async (req, res) => {
+  try {
+    const { id } = req.id;
+    const { otp } = req.body
+
+    if(!id){
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+
+    if (!otp) {
+      return res.status(400).json({
+        success: false,
+      })
+    }
+
+    const spaceStation = await spaceStationModel.findById(id)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    if (spaceStation.reset_password !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP"
+      })
+    }
+
+    if (spaceStation.reset_password_time < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP Expired"
+      })
+    }
+
+    spaceStation.reset_password_status = true
+
+    spaceStation.save()
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully"
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
+
+export const resendOTP = async (req, res) => {
+  try {
+    const { id } = req.id
+    if(!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+
+    const spaceStation = await spaceStationModel.findById(id)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    const otp = generateOTP()
+
+    console.log(`Your OTP for reset your password is: ${otp}`)
+
+    spaceStation.reset_password = otp
+    spaceStation.reset_password_time = Date.now() + 10 * 60 * 1000
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent successfully"
+    })
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
+
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { id } = req.id
+    const {newPassword, confirmPassword} = req.body
+    if(!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID"
+      })
+    }
+
+    if (!newPassword, !confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "All field are necessary"
+      })
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Password does not match"
+      })
+    }
+
+    const spaceStation = await spaceStationModel.findById(id)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    const password = await bcrypt.hash(newPassword, salt)
+
+    spaceStation.password = password
+
+    await spaceStation.save()
+
+    // Clear the authentication cookie
+    res.clearCookie('authToken', {
+      httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not accessible via JavaScript
+      sameSite: 'Strict', // Helps prevent CSRF attacks
+      secure: process.env.NODE_ENV === 'production', // Send the cookie only over HTTPS in production
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully"
+    })
+
   } catch (err) {
     console.log(err)
     return res.status(500).json({

@@ -26,6 +26,7 @@ const spaceStationSchema = new mongoose.Schema({
         ip: { type: String },
         time: { type: Date, default: Date.now }
     }],
+    reset_password_status: { type: Boolean, default: false },
     reset_password: { type: Number },
     reset_password_time: { type: Date },
 }, { timestamps: true });
