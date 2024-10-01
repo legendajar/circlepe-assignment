@@ -2,7 +2,7 @@ import orderModel from "../models/order.model.js";
 import stripe from 'stripe'; // Make sure to import and configure Stripe
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-import SpaceStationRoute from "../routes/spaceStation.route.js";
+import productModel from "../models/product.model.js";
 
 dotenv.config()
 
@@ -10,6 +10,12 @@ const stripeClient = stripe(process.env.STRIPE_SECRET_KEY); // Replace with your
 
 export const addOrder = async (req, res) => {
     const spaceStationId = req.id;
+    if (!spaceStationId) {
+        return res.status(404).json({
+            success: false,
+            message: "Invalid Access, Please Login Again"
+        })
+    }
     const frontendUrl = 'http://localhost:5173';
 
     try {
@@ -55,7 +61,7 @@ export const addOrder = async (req, res) => {
         // Create the order
         const newOrder = await orderModel.create({
             product: productList.map(item => ({
-                product_id: item._id,
+                product_id: mongoose.Types.ObjectId(item._id),
                 quantity: item.quantity,
                 product_price: item.price,
                 expected_delivery_date: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -73,7 +79,7 @@ export const addOrder = async (req, res) => {
                 country,
                 pincode: zip,
             },
-            user_id: spaceStationId,  // Assuming spaceStationId is already ObjectId
+            user_id: mongoose.Types.ObjectId(spaceStationId),  // Assuming spaceStationId is already ObjectId
             total_price,
             payment_method
         });
@@ -178,15 +184,8 @@ export const verifyOrder = async (req, res) => {
 
 export const getOrder = async (req, res) => {
     try {
-        const {id} = req.params;
-        if (!id) {
-            return res.status(404).json({
-                success: false,
-                message: "Invalid Id"
-            })
-        }
-
-        const order = await orderModel.findById(id);
+        const order = await orderModel.find().populate({path: 'product.product_id'
+        }).populate({path: 'user_id'});
         if (!order) {
             return res.status(404).json({
                 success: false,
@@ -234,6 +233,53 @@ export const getOrderByUserId = async (req, res) => {
             data: order
         })
     } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const getPlanetOrder = async(req, res) => {
+    try {
+        const id = req.params.id;
+        if (!id) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid Id"
+            })
+        }
+
+        const products = await productModel.find({
+            planet_id: id
+        }).populate('ratings.userId')
+        const orders = await orderModel.aggregate([
+            { $unwind: "$product" },
+            { $match: { "product.product_id": { $in: products.map(product => product._id)}} },
+            {
+                $group: {
+                    _id: "$product.product_id",
+                    totalOrders: { $sum: "$product.quantity" },
+                    orderDetails: { $push: "$$ROOT"}
+                }
+            },
+            {
+                $lookup: {
+                    from: "products",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "product"
+                }
+            }
+        ]);
+
+        res.status(200).json({
+            success: true,
+            data: orders
+        });
+
+    } catch(err) {
         console.log(err)
         return res.status(500).json({
             success: false,

@@ -2,6 +2,7 @@ import planetModel from "../models/planet.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import productModel from "../models/product.model.js";
+import spaceStationModel from "../models/space_station.model.js";
 
 // Add Planet
 export const addPlanet = async(req, res) => {
@@ -48,8 +49,6 @@ export const addPlanet = async(req, res) => {
             message: "Planet added successfully",
             data: savedPlanet
         })
-
-
     } catch (err) {
         console.log(err)
         return res.status(500).json({
@@ -62,7 +61,7 @@ export const addPlanet = async(req, res) => {
 // Login Planet
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, os, deviceName, ip, location } = req.body;
 
         // Check for required fields
         if (!email) {
@@ -92,9 +91,35 @@ export const login = async (req, res) => {
         if (!isMatch) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid Email or Password"
+                message: "Invalid Credentials"
             });
         }
+
+        const newLogin = {
+            ip: String(ip),
+        }
+        planet.last_login.push(newLogin)
+        const deviceExists = planet.device_details.some(
+            (device) => device.device_ipAddress === ip
+        );
+        if (!deviceExists) {
+            console.log("New Device Detected")
+            console.log(`
+                OS: ${os},
+                Device Name: ${deviceName},
+                IP Address: ${ip},
+                Location: ${location}    
+            `)
+            const newDeviceDetails = {
+                device_os: os,
+                device_name: deviceName,
+                device_ipAddress: ip,
+                device_location: location
+            }
+            planet.device_details.push(newDeviceDetails)
+        }
+
+        await planet.save()
 
         // Generate JWT token
         const tokenData = {
@@ -102,18 +127,23 @@ export const login = async (req, res) => {
         };
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, { expiresIn: '1d' });
 
-        // User object to return
+        const newPlanet = await planetModel.findOne({ email: email })
         const user = {
-            _id: planet._id,
-            email: planet.email,
-        };
+            _id: newPlanet._id,
+            name: newPlanet.name,
+            email: newPlanet.email,
+            mobile: newPlanet.mobile,
+            image: newPlanet.image,
+            device_details: newPlanet.device_details,
+            last_login: newPlanet.last_login
+        }
 
         // Send response with token in cookie
-        return res.status(200).cookie("token", token, {
+        return res.status(200).cookie("planetToken", token, {
             maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
             httpOnly: true,
-            sameSite: 'None',
-            secure: process.env.NODE_ENV === 'production'
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            secure: process.env.NODE_ENV === "production" || true
         }).json({
             success: true,
             message: "Login Successfully",
@@ -130,19 +160,24 @@ export const login = async (req, res) => {
     }
 };
 
-
+// Logout Planet
 export const logout = async (req, res) => {
     try {
-        return res.status(200).cookie("token", "" , {
+        return res.status(200).cookie("planetToken", "" , {
             maxAge: 0,
             httpOnly: true,
-            sameSite: 'strict'
+            sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            secure: process.env.NODE_ENV === "production" || true
         }).json({
             success: true,
             message: "Logout Successfully"
         })
     } catch (err) {
         console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
     }
 }
 

@@ -14,11 +14,14 @@ const Navbar = () => {
     // Logout handler function
     const logoutHandler = async () => {
         try {
-            const res = await axios.post(`${PLANET_API_END_POINT}/logout`, { withCredentials: true });
+            const res = await axios.post(`${PLANET_API_END_POINT}/logout`, {}, { withCredentials: true });
             if (res.data.success) {
                 localStorage.removeItem("token");
                 dispatch(setUser(null));
+                alert(res.data.message)
                 navigate("/planet/login");
+            } else {
+                alert(res.data.message);
             }
         } catch (err) {
             console.log("Logout error:", err);

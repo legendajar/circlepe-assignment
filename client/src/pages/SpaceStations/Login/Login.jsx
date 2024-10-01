@@ -40,7 +40,6 @@ const Login = () => {
 
     try {
       const ip = await getIpAddress();
-      console.log(ip)
 
       // Get location by IP
       const locationRes = await getLocationByIp(ip);
@@ -77,12 +76,17 @@ const Login = () => {
   };
 
   return (
-<div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="relative bg-white py-8 px-6 shadow-lg rounded-lg max-w-md mx-auto">
-        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">Login</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">
+          Login
+        </h2>
         <form onSubmit={submitHandler} className="space-y-6">
           <div>
-            <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <Label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email
             </Label>
             <Input
@@ -96,7 +100,10 @@ const Login = () => {
             />
           </div>
           <div>
-            <Label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <Label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </Label>
             <div className="relative">
@@ -113,24 +120,37 @@ const Login = () => {
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={visibleHandler}
               >
-                {visible ? <Eye className="text-gray-500" /> : <EyeOff className="text-gray-500" />}
+                {visible ? (
+                  <Eye className="text-gray-500" />
+                ) : (
+                  <EyeOff className="text-gray-500" />
+                )}
               </span>
             </div>
           </div>
           <div>
-            <Button type="submit" className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <Button
+              type="submit"
+              className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
               Login
             </Button>
           </div>
         </form>
         <div className="mt-6 text-center">
           <p className="text-gray-600 text-sm">
-            <Link to="/register" className="text-indigo-600 hover:text-indigo-800">
+            <Link
+              to="/register"
+              className="text-indigo-600 hover:text-indigo-800"
+            >
               Don't have an account? Register here
             </Link>
           </p>
           <p className="text-gray-600 text-sm mt-2">
-            <Link to="/spacestation/reset/password" className="text-indigo-600 hover:text-indigo-800">
+            <Link
+              to="/spacestation/reset/password"
+              className="text-indigo-600 hover:text-indigo-800"
+            >
               Forgot password? Reset it here
             </Link>
           </p>

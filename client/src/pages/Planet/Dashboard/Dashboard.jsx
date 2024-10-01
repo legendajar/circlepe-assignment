@@ -1,8 +1,14 @@
+import { useSelector } from 'react-redux'
 import Navbar from '../shared/Navbar'
 import Sidebar from '../shared/Sidebar'
 import DashboardSection from './DashboardSection'
+import useGetProductByPlanet from '@/hooks/useGetProductByPlanet'
+import store from '@/redux/store'
 
 const Dashboard = () => {
+  const planetID = useSelector((store) => store.planet.user._id)
+  useGetProductByPlanet(planetID)
+
   return (
     <div>
         <Navbar />

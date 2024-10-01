@@ -13,16 +13,13 @@ const Register = () => {
   const [input, setInput] = useState({
     name: "",
     email: "",
-    mobile: null,
+    mobile: "",
     password: "",
     confirmPassword: "",
   });
-  const visibleHandler = () => {
-    setVisible(!visible);
-  };
-  const confirmPasswordHandler = () => {
-    setConfirmVisible(!confirmVisible);
-  };
+
+  const visibleHandler = () => setVisible(!visible);
+  const confirmPasswordHandler = () => setConfirmVisible(!confirmVisible);
 
   const changeInputHandler = (e) => {
     setInput({
@@ -37,11 +34,9 @@ const Register = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("name", input.name);
-    formData.append("email", input.email);
-    formData.append("mobile", input.mobile);
-    formData.append("password", input.password);
-    formData.append("confirmPassword", input.confirmPassword);
+    Object.entries(input).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
 
     try {
       const res = await axios.post(
@@ -55,11 +50,11 @@ const Register = () => {
       );
 
       if (res.data.success) {
-        navigate("/login");
         alert(res.data.message);
+        navigate("/login");
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -72,10 +67,7 @@ const Register = () => {
         <form onSubmit={submitHandler} className="space-y-6 w-full">
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <Label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <Label htmlFor="name" className="block text-sm font-medium text-gray-700">
                 Name
               </Label>
               <Input
@@ -86,13 +78,11 @@ const Register = () => {
                 placeholder="Name"
                 value={input.name}
                 onChange={changeInputHandler}
+                required
               />
             </div>
             <div>
-              <Label
-                htmlFor="mobile"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <Label htmlFor="mobile" className="block text-sm font-medium text-gray-700">
                 Mobile
               </Label>
               <Input
@@ -103,14 +93,12 @@ const Register = () => {
                 placeholder="Mobile"
                 value={input.mobile}
                 onChange={changeInputHandler}
+                required
               />
             </div>
           </div>
           <div>
-            <Label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <Label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </Label>
             <Input
@@ -121,13 +109,11 @@ const Register = () => {
               placeholder="Email"
               value={input.email}
               onChange={changeInputHandler}
+              required
             />
           </div>
           <div>
-            <Label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <Label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </Label>
             <div className="relative">
@@ -139,24 +125,18 @@ const Register = () => {
                 placeholder="Password"
                 value={input.password}
                 onChange={changeInputHandler}
+                required
               />
               <span
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={visibleHandler}
               >
-                {visible ? (
-                  <Eye className="text-gray-500" />
-                ) : (
-                  <EyeOff className="text-gray-500" />
-                )}
+                {visible ? <Eye className="text-gray-500" /> : <EyeOff className="text-gray-500" />}
               </span>
             </div>
           </div>
           <div>
-            <Label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <Label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
               Confirm Password
             </Label>
             <div className="relative">
@@ -168,16 +148,13 @@ const Register = () => {
                 placeholder="Confirm Password"
                 value={input.confirmPassword}
                 onChange={changeInputHandler}
+                required
               />
               <span
                 className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                 onClick={confirmPasswordHandler}
               >
-                {confirmVisible ? (
-                  <Eye className="text-gray-500" />
-                ) : (
-                  <EyeOff className="text-gray-500" />
-                )}
+                {confirmVisible ? <Eye className="text-gray-500" /> : <EyeOff className="text-gray-500" />}
               </span>
             </div>
           </div>
@@ -189,10 +166,7 @@ const Register = () => {
           </Button>
           <div className="text-sm text-center text-gray-500 mt-4">
             Already have an account?{" "}
-            <Link
-              to="/login"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
+            <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
               Login here
             </Link>
           </div>

@@ -6,9 +6,19 @@ const planetSchema = new mongoose.Schema({
     mobile: { type: Number, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    last_login: { type: Date, default: Date.now()},
-    last_IP_Address: { type: Number },
+    image: { type: String },
+    device_details: [{
+        device_os: { type: String },
+        device_ipAddress: { type: String },
+        device_location: { type: String },
+        device_name: { type: String }
+    }],
+    last_login: [{
+        ip: { type: String },
+        time: { type: Date, default: Date.now }
+    }],
     reset_password: {type: Number},
+    reset_password_status: {type: Boolean, default: false},
     reset_password_time: {type: Date},
 }, {timestamps: true});
 

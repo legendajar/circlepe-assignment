@@ -4,10 +4,12 @@ import axios from "axios";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "@/redux/spaceStationSlice";
+import { useParams } from "react-router-dom";
 
 const UpdateProfile = () => {
+  const params = useParams();
+  const id = params.id
   const dispatch = useDispatch();
-  const { id } = useSelector((store) => store.spaceStation.user);
   const [input, setInput] = useState({
     name: "",
     email: "",

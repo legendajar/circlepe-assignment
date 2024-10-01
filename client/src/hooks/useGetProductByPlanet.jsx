@@ -7,9 +7,11 @@ import { useDispatch } from 'react-redux'
 
 const useGetProductByPlanet = (id) => {
   const dispatch = useDispatch();
+  
   useEffect(() => {
     const fetchProductByPlanet = async () => {
         try {
+            console.log("id: ", id)
             const res = await axios.get(`${PRODUCT_API_END_POINT}/get/planet/${id}`, {withCredentials: true})
             if (res.data.success) {
                 dispatch(setPlanetProductList(res.data.data))

@@ -7,7 +7,7 @@ const Sidebar = () => {
     <div className='w-full h-[99vh] background bg-bodyColor shadow-xl text-white'>
         <div className='flex flex-col gap-4'>
             <div className='flex flex-col items-center justify-between'>
-                <Link to='/admin/dashboard' className='w-full'>
+                <Link to='/planet/dashboard' className='w-full'>
                     <div className='border-b px-5 flex items-center gap-2 text-lg py-2 font-bold-lg group hover:bg-designColor hover:text-white'>
                         <span className='hidden md:inline'>Dashboard</span> <LayoutDashboard />
                     </div>

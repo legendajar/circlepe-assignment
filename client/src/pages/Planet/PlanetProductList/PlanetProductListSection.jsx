@@ -11,9 +11,9 @@ import useGetProductByPlanet from '@/hooks/useGetProductByPlanet'
 import { useSelector } from 'react-redux'
 
 const PlanetProductListSection = () => {
-  const {setUser} = useSelector(store => store.planet)
-  useGetProductByPlanet(setUser._id)
-  const productList = useSelector(store => store.product.productListByPlanet)
+  const {user} = useSelector(store => store.planet)
+  useGetProductByPlanet(user._id)
+  const productList = useSelector(store => store.product.planetProductList)
   return (
     <div className='w-full h-full p-3'>
         <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>
@@ -30,7 +30,8 @@ const PlanetProductListSection = () => {
                         <TableHead className='font-bold text-black text-center'>Name</TableHead>
                         <TableHead className='font-bold text-black text-center'>Price</TableHead>
                         <TableHead className='font-bold text-black text-center'>Quantity</TableHead>
-                        <TableHead className='font-bold text-black text-center'>category</TableHead>
+                        <TableHead className='font-bold text-black text-center'>Category</TableHead>
+                        <TableHead className='font-bold text-black text-right'>Action</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -42,8 +43,11 @@ const PlanetProductListSection = () => {
                                     <TableCell className='text-left'>{index + 1}</TableCell>
                                     <TableCell className='text-center'>{product.name}</TableCell>
                                     <TableCell className='text-center'>{product.price}</TableCell>
-                                    <TableCell className='text-center'>{product.quantity}</TableCell>
+                                    <TableCell className='text-center'>{product.stock}</TableCell>
                                     <TableCell className='text-center'>{product.category}</TableCell>
+                                    <TableCell className='text-right'>
+                                      ...
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : 

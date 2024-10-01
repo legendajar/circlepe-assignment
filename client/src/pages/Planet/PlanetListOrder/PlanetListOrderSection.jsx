@@ -7,8 +7,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import useGetAllPlanetOrder from '@/hooks/useGetAllPlanetOrder'
+import { useSelector } from 'react-redux'
 
 const PlanetListOrderSection = () => {
+  const user = useSelector(store => store.planet.user)
+  useGetAllPlanetOrder(user._id)
+  
   return (
     <div className='w-full h-full p-3'>
         <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>

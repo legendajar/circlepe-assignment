@@ -1,4 +1,4 @@
-import spaceStationModel from "../models/space_station.model.js";
+ import spaceStationModel from "../models/space_station.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import generateOTP from "../utils/OTP_Gen.js";
@@ -56,106 +56,109 @@ export const register = async (req, res) => {
 
 // Login Space Station
 export const login = async (req, res) => {
-    try {
-      const { email, password, os, deviceName, ip, location } = req.body;
-  
-      // Validate input
-      if (!email || !password || !ip) {
-        return res.status(400).json({
-          success: false,
-          message: "Email, Password, and IP address are required",
-        });
-      }
-  
-      // Find user by email
-      let spaceStation = await spaceStationModel.findOne({ email });
-      if (!spaceStation) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid Credentials",
-        });
-      }
-  
-      // Check password
-      const isMatch = await bcrypt.compare(password, spaceStation.password);
-      if (!isMatch) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid Credentials",
-        });
-      }
-  
-      // Create new login entry
-      const newLogin = {
-        ip: String(ip) // Ensure ip is a string
-      };
-  
-      // Push new login to last_login array
-      spaceStation.last_login.push(newLogin);
-  
-      // Check if the device already exists in device_details
-      const deviceExists = spaceStation.device_details.some(
-        (device) => device.device_ipAddress === newLogin.ip
-      );
-  
-      if (!deviceExists) {
-        // Add new device details
-        const newDeviceDetails = {
-          device_os: os,
-          device_name: deviceName,
-          device_ipAddress: newLogin.ip,
-          device_location: location,
-        };
-        spaceStation.device_details.push(newDeviceDetails);
-      }
-  
-      // Save updated spaceStation document
-      await spaceStation.save();
-  
-      const tokenData = {
-        userId: spaceStation._id,
-      };
-  
-      const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {
-        expiresIn: "1d",
-      });
-  
-      const newSpaceStation = await spaceStationModel.findOne({email: email})
-      // User info to send in response
-      const user = {
-        _id: newSpaceStation._id,
-        name: newSpaceStation.name,
-        email: newSpaceStation.email,
-        mobile: newSpaceStation.mobile,
-        address: newSpaceStation.address,
-        device_details: newSpaceStation.device_details,
-        image: newSpaceStation.image,
-        last_login: newSpaceStation.last_login,
-      };
-  
-      // Send response with token in cookie
-      return res
-        .status(200)
-        .cookie("token", token, {
-          maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
-          httpOnly: true,
-          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
-          secure: process.env.NODE_ENV === "production",
-        })
-        .json({
-          success: true,
-          message: "Space Station Login Successfully",
-          user,
-          token,
-        });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({
+  try {
+    const { email, password, os, deviceName, ip, location } = req.body;
+
+    // Validate input
+    if (!email || !password || !ip) {
+      return res.status(400).json({
         success: false,
-        message: "Internal Server Error",
+        message: "Email, Password, and IP address are required",
       });
     }
-  };
+
+    // Find user by email
+    let spaceStation = await spaceStationModel.findOne({ email });
+    if (!spaceStation) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, spaceStation.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Credentials",
+      });
+    }
+
+    // Create new login entry with current date and time
+    const newLogin = {
+      ip: String(ip), // Ensure ip is a string
+      time: new Date() // Set to current date and time
+    };
+
+    // Push new login to last_login array
+    spaceStation.last_login.push(newLogin);
+
+    // Check if the device already exists in device_details
+    const deviceExists = spaceStation.device_details.some(
+      (device) => device.device_ipAddress === newLogin.ip
+    );
+
+    if (!deviceExists) {
+      // Add new device details
+      const newDeviceDetails = {
+        device_os: os,
+        device_name: deviceName,
+        device_ipAddress: newLogin.ip,
+        device_location: location,
+      };
+      spaceStation.device_details.push(newDeviceDetails);
+    }
+
+    // Save updated spaceStation document
+    await spaceStation.save();
+
+    const tokenData = {
+      userId: spaceStation._id,
+    };
+
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET_KEY, {
+      expiresIn: "1d",
+    });
+
+    const newSpaceStation = await spaceStationModel.findOne({ email });
+
+    // User info to send in response
+    const user = {
+      _id: newSpaceStation._id,
+      name: newSpaceStation.name,
+      email: newSpaceStation.email,
+      mobile: newSpaceStation.mobile,
+      address: newSpaceStation.address,
+      device_details: newSpaceStation.device_details,
+      image: newSpaceStation.image,
+      last_login: newSpaceStation.last_login,
+    };
+
+    // Send response with token in cookie
+    return res
+      .status(200)
+      .cookie("token", token, {
+        maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+        httpOnly: true,
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+        secure: process.env.NODE_ENV === "production",
+      })
+      .json({
+        success: true,
+        message: "Space Station Login Successfully",
+        user,
+        token,
+      });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
   
 
 export const logout = async (req, res) => {
@@ -239,6 +242,7 @@ export const getSpaceStationById = async (req, res) => {
 export const updateSpaceStation = async (req, res) => {
   // Correct way to access id from req
   const id = req.id;
+  console.log(id)
 
   // Destructure the fields from request body
   const { name, email, mobile } = req.body;

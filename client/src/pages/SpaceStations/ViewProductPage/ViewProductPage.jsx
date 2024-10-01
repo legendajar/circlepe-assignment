@@ -3,7 +3,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import useGetSingleProduct from "@/hooks/useGetSingleProduct";
 import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "@/redux/cartSlice";
-import useGetAllProduct from "@/hooks/useGetAllProduct";
 import {
   Carousel,
   CarouselContent,
@@ -13,17 +12,19 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import ReviewCard from "@/components/SpaceStations/ReviewCard/ReviewCard";
+import useGetAllProduct from "@/hooks/useGetAllProduct";
+
 const ViewProductPage = () => {
-  useGetAllProduct();
-  const dispatch = useDispatch();
   const params = useParams();
-  const navigate = useNavigate();
   const id = params.id;
   useGetSingleProduct(id);
-  const { productList } = useSelector((store) => store.product);
-  const { singleProduct } = useSelector((store) => store.product);
-  const cartItems = useSelector((store) => store.cart.cartItems);
 
+  useGetAllProduct();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { singleProduct } = useSelector((store) => store.product);
+  const { productList } = useSelector((store) => store.product);
+  const cartItems = useSelector((store) => store.cart.cartItems);
   // Check if the product is already in the cart
   const isInCart = cartItems.some((item) => item._id === singleProduct._id);
   const addCartHandler = (e) => {
@@ -43,47 +44,50 @@ const ViewProductPage = () => {
       state: { product: singleProduct },
     });
   };
-
   return (
     <div>
       <Navbar />
-      <div className="w-full max-w-5xl mx-auto p-6">
-        <div className="flex flex-col md:flex-row gap-6">
-          <div className="w-full md:w-1/2">
-            <img
-              src={singleProduct.image}
-              alt={singleProduct.name}
-              className="w-[300px] h-[300px] object-cover rounded-lg"
-            />
-          </div>
-          <div className="w-full md:w-1/2 flex flex-col justify-between">
-            <h1 className="text-3xl font-bold mb-4">{singleProduct.name}</h1>
-            <p className="text-lg text-gray-700 mb-4">
-              {singleProduct.description}
-            </p>
-            <p className="text-xl font-semibold text-gray-900 mb-4">
-              Price: ${singleProduct.price}
-            </p>
-            <div className="flex gap-4">
-              <button
-                onClick={addCartHandler}
-                className={`px-4 py-2 rounded-lg ${
-                  isInCart ? "bg-green-500" : "bg-blue-500"
-                } text-white`}
-                disabled={isInCart} // Disable the button if the product is already in the cart
-              >
-                {isInCart ? "Added to Cart" : "Add to Cart"}
-              </button>
-              <button
-                onClick={buyNowHandler}
-                className="bg-gray-500 text-white px-4 py-2 rounded-lg"
-              >
-                Buy Now
-              </button>
+      {!singleProduct ? (
+        <div>Loading product details...</div>
+      ) : (
+        <div className="w-full max-w-5xl mx-auto p-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="w-full md:w-1/2">
+              <img
+                src={singleProduct?.image}
+                alt={singleProduct?.name}
+                className="w-[300px] h-[300px] object-cover rounded-lg"
+              />
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col justify-between">
+              <h1 className="text-3xl font-bold mb-4">{singleProduct.name}</h1>
+              <p className="text-lg text-gray-700 mb-4">
+                {singleProduct?.description}
+              </p>
+              <p className="text-xl font-semibold text-gray-900 mb-4">
+                Price: ${singleProduct?.price}
+              </p>
+              <div className="flex gap-4">
+                <button
+                  onClick={addCartHandler}
+                  className={`px-4 py-2 rounded-lg ${
+                    isInCart ? "bg-green-500" : "bg-blue-500"
+                  } text-white`}
+                  disabled={isInCart}
+                >
+                  {isInCart ? "Added to Cart" : "Add to Cart"}
+                </button>
+                <button
+                  onClick={buyNowHandler}
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg"
+                >
+                  Buy Now
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Ratings & Review */}
       <div className="w-full max-w-7xl mx-auto p-6">
@@ -96,7 +100,7 @@ const ViewProductPage = () => {
           </Link>
         </div>
         <hr className="mb-8" />
-        <div className="flex flex-row gap-5">
+        <div className="flex flex-col gap-5 p-6 bg-gray-50 rounded-lg shadow-md">
           <Carousel
             opts={{
               align: "start",
@@ -105,14 +109,22 @@ const ViewProductPage = () => {
             className="w-full"
           >
             <CarouselContent>
-              {singleProduct.ratings.map((rating, index) => (
-                <CarouselItem className="max-w-md" key={index}>
-                  <ReviewCard rating={rating} />
+              {singleProduct.ratings && singleProduct.ratings.length > 0 ? (
+                singleProduct.ratings.map((rating, index) => (
+                  <CarouselItem className="max-w-md" key={index}>
+                    <ReviewCard rating={rating} />
+                  </CarouselItem>
+                ))
+              ) : (
+                <CarouselItem className="flex justify-center items-center h-64">
+                  <p className="text-lg font-semibold text-gray-600">
+                    No Ratings Yet
+                  </p>
                 </CarouselItem>
-              ))}
+              )}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="bg-blue-500 text-white rounded-full p-2" />
+            <CarouselNext className="bg-blue-500 text-white rounded-full p-2" />
           </Carousel>
         </div>
       </div>
