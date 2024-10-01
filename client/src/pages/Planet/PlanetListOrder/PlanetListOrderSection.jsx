@@ -9,63 +9,69 @@ import {
 } from "@/components/ui/table"
 import useGetAllPlanetOrder from '@/hooks/useGetAllPlanetOrder'
 import { useSelector } from 'react-redux'
+import { CircleAlert } from 'lucide-react'
 
 const PlanetListOrderSection = () => {
   const user = useSelector(store => store.planet.user)
   useGetAllPlanetOrder(user._id)
-  
+  const orders = useSelector((store) => store.planet.planetOrderList)
+
   return (
-    <div className='w-full h-full p-3'>
-        <div className='flex flex-col gap-5 p-5 border rounded-md shadow-md'>
-          <div className='flex items-center justify-between gap-5'>
-            <h1 className='text-lg font-bold font-titleFonts'>Orders</h1>
-            <Input type='text' className='w-2/5' placeholder='Enter Product Name or Product ID' />
-          </div>
-          <hr className='my-2'/>
-          <div className='w-full'>
-            <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead class>S.No</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Mobile</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Product Count</TableHead>
-                    </TableRow>
-                </TableHeader>
-                <TableBody>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                    <TableRow>
-                        <TableCell>1</TableCell>
-                        <TableCell>Harsh Solanki</TableCell>
-                        <TableCell>1234567890</TableCell>
-                        <TableCell>9Ys9i@example.com</TableCell>
-                        <TableCell>5</TableCell>
-                    </TableRow>
-                </TableBody>
-            </Table>
+    <div className='w-full h-full p-6'>
+      <div className='flex flex-col gap-5 p-6 border border-gray-200 rounded-md shadow-md bg-white'>
+        {/* Header */}
+        <div className='flex items-center justify-between gap-5'>
+          <h1 className='text-2xl font-bold font-titleFonts text-gray-800'>Orders</h1>
+          <Input 
+            type='text' 
+            className='w-2/5 border border-gray-300 p-3 rounded-md shadow-sm focus:ring focus:ring-blue-200 transition duration-200' 
+            placeholder='Search by Product Name or ID'
+          />
         </div>
+        <hr className='my-3 border-gray-200' />
+
+        {/* Table */}
+        <div className='w-full overflow-auto'>
+          <Table className='min-w-full'>
+            <TableHeader>
+              <TableRow className='bg-gray-100'>
+                <TableHead className='text-left text-gray-600 py-3 px-4'>S.No</TableHead>
+                <TableHead className='text-left text-gray-600 py-3 px-4'>Product Name</TableHead>
+                <TableHead className='text-left text-gray-600 py-3 px-4'>Quantity</TableHead>
+                <TableHead className='text-left text-gray-600 py-3 px-4'>Price</TableHead>
+                <TableHead className='text-left text-gray-600 py-3 px-4'>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {
+                orders && orders.length > 0 ? (
+                  orders.map((order, index) => (
+                    <TableRow key={order._id} className={`hover:bg-gray-50 transition duration-200`}>
+                      <TableCell className='py-3 px-4'>{index + 1}</TableCell>
+                      <TableCell className='py-3 px-4'>{order.product[0]?.name || 'N/A'}</TableCell>
+                      <TableCell className='py-3 px-4'>{order.orderDetails[0]?.product.quantity || 'N/A'}</TableCell>
+                      <TableCell className='py-3 px-4'>${order.orderDetails[0]?.product.product_price || 'N/A'}</TableCell>
+                      <TableCell className='py-3 px-4'>
+                        <button className="text-blue-500 hover:text-blue-600 font-medium transition duration-150">View Details</button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className='text-center py-8'>
+                      <div className='flex flex-col items-center gap-2'>
+                        <CircleAlert className='text-5xl text-gray-400' />
+                        <span className='text-xl text-gray-500 font-semibold'>No Orders Found</span>
+                        <span className='text-gray-400'>Your recent orders will appear here.</span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )
+              }
+            </TableBody>
+          </Table>
         </div>
+      </div>
     </div>
   )
 }

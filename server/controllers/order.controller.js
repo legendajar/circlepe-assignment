@@ -14,7 +14,7 @@ export const addOrder = async (req, res) => {
         return res.status(404).json({
             success: false,
             message: "Invalid Access, Please Login Again"
-        })
+        });
     }
     const frontendUrl = 'http://localhost:5173';
 
@@ -61,7 +61,7 @@ export const addOrder = async (req, res) => {
         // Create the order
         const newOrder = await orderModel.create({
             product: productList.map(item => ({
-                product_id: mongoose.Types.ObjectId(item._id),
+                product_id: new mongoose.Types.ObjectId(item._id),  // Use 'new' here
                 quantity: item.quantity,
                 product_price: item.price,
                 expected_delivery_date: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -79,7 +79,7 @@ export const addOrder = async (req, res) => {
                 country,
                 pincode: zip,
             },
-            user_id: mongoose.Types.ObjectId(spaceStationId),  // Assuming spaceStationId is already ObjectId
+            user_id: new mongoose.Types.ObjectId(spaceStationId),  // Use 'new' here as well
             total_price,
             payment_method
         });

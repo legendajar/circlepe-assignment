@@ -30,6 +30,7 @@ import RatingProduct from "./pages/SpaceStations/RatingProduct/RatingProduct";
 import ProfilePage from "./pages/SpaceStations/ProfilePage/ProfilePage";
 import ResetPassword from "./pages/SpaceStations/ResetPassword/ResetPassword";
 import ResetPasswordForm from "./pages/SpaceStations/ResetPassword/ResetPasswordForm";
+import OrderDetailsPage from "./pages/Planet/OrderDetailPage/OrderDetailPage";
 
 
 const appRouter = createBrowserRouter([
@@ -124,6 +125,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/planet/order/view',
     element: <PlanetListOrder />
+  },
+
+  {
+    path:'/planet/order/view/:id',
+    element: <OrderDetailsPage />
   },
 
   // Space Station Route
