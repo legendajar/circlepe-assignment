@@ -23,8 +23,6 @@ const useGetAllSpaceStation = () => {
 
     fetchAllSpaceStations();
   }, [dispatch]);
-
-  return null;
 };
 
 export default useGetAllSpaceStation;

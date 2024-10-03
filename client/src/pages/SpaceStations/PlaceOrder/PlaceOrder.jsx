@@ -39,6 +39,8 @@ const PlaceOrder = ({ singleProduct = null }) => {
     const handlePlaceOrder = async (e) => {
         e.preventDefault();
 
+        console.log(cartItems)
+
         try {
             const res = await axios.post(`${ORDER_API_END_POINT}/add`, {
                 name: address.name,

@@ -3,6 +3,7 @@ import stripe from 'stripe'; // Make sure to import and configure Stripe
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
 import productModel from "../models/product.model.js";
+import spaceStationModel from "../models/space_station.model.js";
 
 dotenv.config()
 
@@ -61,12 +62,13 @@ export const addOrder = async (req, res) => {
         // Create the order
         const newOrder = await orderModel.create({
             product: productList.map(item => ({
-                product_id: new mongoose.Types.ObjectId(item._id),  // Use 'new' here
+                product_id: new mongoose.Types.ObjectId(item._id),  // Using 'new' here for ObjectId
                 quantity: item.quantity,
                 product_price: item.price,
-                expected_delivery_date: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-                delivery_status: [{
-                    city: "Pending",
+                expected_delivery_date: Date.now() + 7 * 24 * 60 * 60 * 1000,  // 7 days delivery
+                order_status: "Pending",
+                delivery_location: [{
+                    city: "Pending"
                 }]
             })),
             address: {
@@ -79,7 +81,7 @@ export const addOrder = async (req, res) => {
                 country,
                 pincode: zip,
             },
-            user_id: new mongoose.Types.ObjectId(spaceStationId),  // Use 'new' here as well
+            user_id: new mongoose.Types.ObjectId(spaceStationId),  // Using 'new' for user ObjectId
             total_price,
             payment_method
         });
@@ -96,6 +98,7 @@ export const addOrder = async (req, res) => {
             quantity: item.quantity,
         }));
 
+        // Add delivery charges
         lineItems.push({
             price_data: {
                 currency: 'inr',
@@ -134,7 +137,6 @@ export const addOrder = async (req, res) => {
         });
     }
 };
-
 
 export const verifyOrder = async (req, res) => {
     const { success, orderId } = req.body;
@@ -241,45 +243,125 @@ export const getOrderByUserId = async (req, res) => {
     }
 }
 
-export const getPlanetOrder = async(req, res) => {
+export const getPlanetOrder = async (req, res) => {
     try {
-        const id = req.params.id;
-        if (!id) {
+        const planetId = req.params.id;
+        if (!planetId) {
             return res.status(404).json({
                 success: false,
                 message: "Invalid Id"
-            })
+            });
         }
 
-        const products = await productModel.find({
-            planet_id: id
-        }).populate('ratings.userId')
+        // Fetch the products belonging to the planet
+        const products = await productModel.find({ planet_id: planetId }).populate('ratings.userId');
+
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No products found for this planet"
+            });
+        }
+
+        // Find orders where product.product_id matches the planet's products
         const orders = await orderModel.aggregate([
             { $unwind: "$product" },
-            { $match: { "product.product_id": { $in: products.map(product => product._id)}} },
-            {
-                $group: {
-                    _id: "$product.product_id",
-                    totalOrders: { $sum: "$product.quantity" },
-                    orderDetails: { $push: "$$ROOT"}
-                }
-            },
+            { $match: { "product.product_id": { $in: products.map(product => product._id) } } },
+            // Lookup product details to access the price
             {
                 $lookup: {
                     from: "products",
-                    localField: "_id",
+                    localField: "product.product_id",
                     foreignField: "_id",
-                    as: "product"
+                    as: "productDetails"
+                }
+            },
+            { $unwind: "$productDetails" }, // Unwind product details to access individual prices
+            {
+                $group: {
+                    _id: "$_id",
+                    totalQuantity: { $sum: "$product.quantity" }, // Calculate total quantity
+                    totalPrice: { // Calculate total price of the order
+                        $sum: {
+                            $multiply: ["$product.quantity", "$productDetails.price"] // Use price from productDetails
+                        }
+                    },
+                    orderDetails: { $push: "$$ROOT" }, // Keep the full order details
+                    productDetails: { $push: "$productDetails" }, // Keep the product details in the response
+                    address: { $first: "$address" } // Keep the address of the order
+                }
+            },
+            // Lookup user details
+            {
+                $lookup: {
+                    from: "spacestations",  // Collection for the user data
+                    localField: "orderDetails.user_id",
+                    foreignField: "_id",
+                    as: "userDetails"
+                }
+            },
+            {
+                $unwind: "$userDetails" // Unwind to access user details
+            },
+            {
+                $project: {
+                    totalQuantity: 1,
+                    totalPrice: 1,
+                    productDetails: 1, // Include product details
+                    address: 1, // Include address
+                    "userDetails._id": 1,
+                    "userDetails.name": 1,
+                    "userDetails.email": 1,
+                    "userDetails.mobile": 1
                 }
             }
         ]);
+
+        // If no orders are found
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No orders found for products listed by this planet"
+            });
+        }
 
         res.status(200).json({
             success: true,
             data: orders
         });
 
-    } catch(err) {
+    } catch (err) {
+        console.error('Error fetching planet orders:', err);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
+export const getOrderById = async (req, res) => {
+    try {
+        const orderId = req.params.id
+        if (!orderId) {
+            return res.status(404).json({
+                success: false,
+                message: "Invalid order ID"
+            });
+        }
+
+        const order = await orderModel.findById(orderId);
+        if (!order) {
+            return res.status(404).json({
+                success: false,
+                message: "Order not found"
+            })
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: order
+        })
+    } catch (err) {
         console.log(err)
         return res.status(500).json({
             success: false,
@@ -287,4 +369,3 @@ export const getPlanetOrder = async(req, res) => {
         })
     }
 }
-

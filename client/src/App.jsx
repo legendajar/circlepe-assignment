@@ -30,7 +30,7 @@ import RatingProduct from "./pages/SpaceStations/RatingProduct/RatingProduct";
 import ProfilePage from "./pages/SpaceStations/ProfilePage/ProfilePage";
 import ResetPassword from "./pages/SpaceStations/ResetPassword/ResetPassword";
 import ResetPasswordForm from "./pages/SpaceStations/ResetPassword/ResetPasswordForm";
-import OrderDetailsPage from "./pages/Planet/OrderDetailPage/OrderDetailPage";
+import OrderDetailsPage from "./pages/Planet/OrderDetailPage/OrderDetailPageSection";
 
 
 const appRouter = createBrowserRouter([
@@ -117,7 +117,7 @@ const appRouter = createBrowserRouter([
     element: <AddProduct />
   },
 
-  {
+  { 
     path: '/planet/product/view',
     element: <PlanetProductList />
   },

@@ -17,8 +17,7 @@ import useGetAllProduct from "@/hooks/useGetAllProduct";
 const ViewProductPage = () => {
   const params = useParams();
   const id = params.id;
-  useGetSingleProduct(id);
-
+  useGetSingleProduct(`${id}`);
   useGetAllProduct();
   const dispatch = useDispatch();
   const navigate = useNavigate();

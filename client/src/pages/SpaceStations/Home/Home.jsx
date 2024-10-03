@@ -11,8 +11,10 @@ import {
 import useGetAllProduct from "@/hooks/useGetAllProduct";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import useGetSingleProduct from "@/hooks/useGetSingleProduct";
 
 const Home = () => {
+  useGetSingleProduct('66fbbe1d3220f92561d86eb0');
   useGetAllProduct();
   const { productList } = useSelector((store) => store.product);
   return (

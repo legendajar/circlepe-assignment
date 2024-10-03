@@ -4,7 +4,6 @@ const orderSchema = new mongoose.Schema({
     product: [{
         product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         quantity: { type: Number, required: true },
-        product_price: { type: Number, required: true },
         expected_delivery_date: {type: Date, default: Date.now},
         order_status: { type: String, default: "Pending" },
         delivery_location: [{

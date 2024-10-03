@@ -10,6 +10,7 @@ const cartSlice = createSlice({
             state.cartItems = action.payload;
         },
         addItemToCart: (state, action) => {
+            console.log()
             const existingItem = state.cartItems.find(item => item._id === action.payload._id);
             if (existingItem) {
                 // Ensure quantity does not exceed available stock
