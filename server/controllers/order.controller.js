@@ -339,33 +339,43 @@ export const getPlanetOrder = async (req, res) => {
     }
 };
 
-export const getOrderById = async (req, res) => {
+
+export const getPlanetSingleOrder = async (req, res) => {
     try {
-        const orderId = req.params.id
+        const orderId = req.params.id;
+        // Validate the order ID
         if (!orderId) {
             return res.status(404).json({
                 success: false,
-                message: "Invalid order ID"
+                message: "Invalid Order ID"
             });
         }
 
-        const order = await orderModel.findById(orderId);
+        // Fetch the order by ID and populate user and product details
+        const order = await orderModel.findById(orderId)
+            .populate({ path: 'user_id' })
+            .populate({ path: 'product.product_id' });
+
+        // Check if order exists
         if (!order) {
             return res.status(404).json({
                 success: false,
-                message: "Order not found"
-            })
+                message: "Order Not Found"
+            });
         }
 
+        console.log(order)
+        // Return the order details
         return res.status(200).json({
             success: true,
-            data: order
-        })
+            data: order // Directly return the order object
+        });
     } catch (err) {
-        console.log(err)
+        console.error('Error fetching single planet order:', err);
         return res.status(500).json({
             success: false,
             message: "Internal Server Error"
-        })
+        });
     }
-}
+};
+

@@ -6,7 +6,7 @@ import { ORDER_API_END_POINT } from '@/utils/URLS.js';
 import { useNavigate } from 'react-router-dom';
 import { clearCart } from '@/redux/cartSlice';
 
-const PlaceOrder = ({ singleProduct = null }) => {
+const PlaceOrder = ({singleProduct}) => {
     const cartItemsFromStore = useSelector(store => store.cart.cartItems);
     const [cartItems, setCartItems] = useState(singleProduct ? [singleProduct] : cartItemsFromStore);  // Use single product if it's a direct order
     const [address, setAddress] = useState({
