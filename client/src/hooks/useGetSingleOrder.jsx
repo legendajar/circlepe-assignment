@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-const useGetSingleOrder = (id) => {
+const useGetSingleOrder = (refresh, id) => {
   const dispatch = useDispatch();
   console.log("Order ID Received: ", id)
   useEffect(() => {
@@ -26,7 +26,7 @@ const useGetSingleOrder = (id) => {
         }
     };
     fetchSingleProduct();
-  }, [id, dispatch]);
+  }, [refresh, id, dispatch]);
 };
 
 export default useGetSingleOrder;

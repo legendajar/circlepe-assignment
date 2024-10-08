@@ -11,13 +11,45 @@ import { useParams } from "react-router-dom";
 import useGetSingleOrder from "@/hooks/useGetSingleOrder";
 import { useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import { ORDER_API_END_POINT } from "@/utils/URLS";
+import { useState } from "react";
 
 const OrderDetailsPageSection = () => {
+  const [refresh, setRefresh] = useState(false);
   const params = useParams();
   const orderId = params.id;
-  useGetSingleOrder(orderId);
+  useGetSingleOrder(refresh, orderId);
   const order = useSelector((store) => store.order.singleOrder);
   const user = useSelector((store) => store.planet.user);
+  const orderStatusHandler = async (productId, orderStatus, location) => {
+    try {
+      const formData = new FormData();
+      formData.append("productId", productId);
+      formData.append("orderStatus", orderStatus);
+      formData.append("location", location);
+
+      const res = await axios.post(
+        `${ORDER_API_END_POINT}/update/status/${order._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+      if (res.data.success) {
+        alert("Order status updated successfully");
+        setRefresh(!refresh);
+      } else {
+        alert(res.data.message);
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Please contact Integalatic Store");
+    }
+  };
   return (
     <div className="w-full h-full p-6">
       <div className="flex flex-col gap-5 p-6 border rounded-md shadow-lg bg-white">
@@ -121,20 +153,47 @@ const OrderDetailsPageSection = () => {
                       <TableCell className="px-4 py-3 text-gray-800">
                         {prod.product_id.stock || "N/A"}
                       </TableCell>
-                      <TableCell className="px-4 py-3 flex items-center gap-3">
-                        <button
-                          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-all flex items-center justify-center"
-                          aria-label="Approve"
-                        >
-                          <Check className="w-5 h-5" />
-                        </button>
-                        <button
-                          className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-all flex items-center justify-center"
-                          aria-label="Reject"
-                        >
-                          <BanIcon className="w-5 h-5" />
-                        </button>
-                      </TableCell>
+                      {
+                        prod.order_status === "Pending" ? (
+                        <TableCell className="px-4 py-3 flex items-center justify-center gap-3">
+                          <Button
+                            onClick={() =>
+                              orderStatusHandler(
+                                prod.product_id._id,
+                                "Accepted"
+                              )
+                            }
+                            className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-all flex items-center justify-center"
+                            aria-label="Approve"
+                          >
+                            <Check className="w-5 h-5" />
+                          </Button>
+                          <Button
+                            onClick={() =>
+                              orderStatusHandler(
+                                prod.product_id._id,
+                                "Rejected"
+                              )
+                            }
+                            className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-all flex items-center justify-center"
+                            aria-label="Reject"
+                          >
+                            <BanIcon className="w-5 h-5" />
+                          </Button>
+                        </TableCell>
+                      ) : (
+                        <TableCell className="px-4 py-3">
+                          <span
+                            className={`px-2 py-1 rounded-md ${
+                              prod.order_status !== "Cancelled"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {prod.order_status}
+                          </span>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ) : null
                 )}
@@ -157,14 +216,6 @@ const OrderDetailsPageSection = () => {
               Transaction ID: <strong>#{order.transaction_id}</strong>
             </p>
           </div>
-        </div>
-
-        {/* One-Time Update Order Status Button */}
-        <div className="flex gap-5 justify-end mt-5">
-          <Button className="bg-red-500 hover:bg-red-500">Cancel Order</Button>
-          <Button className="px-5 py-2 rounded-md text-white shadow-md bg-green-500 hover:bg-green-500">
-            Accept Order
-          </Button>
         </div>
       </div>
     </div>

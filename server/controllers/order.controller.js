@@ -364,7 +364,6 @@ export const getPlanetSingleOrder = async (req, res) => {
             });
         }
 
-        console.log(order)
         // Return the order details
         return res.status(200).json({
             success: true,
@@ -378,4 +377,85 @@ export const getPlanetSingleOrder = async (req, res) => {
         });
     }
 };
+
+
+export const updateStatus = async (req, res) => {
+    try {
+      const orderId = req.params.id;
+      const { productId, orderStatus, location } = req.body;
+  
+      // Check required parameters
+      if (!orderId || !productId || !orderStatus) {
+        return res.status(400).json({
+          success: false,
+          message: "Order ID, product ID, and status are required"
+        });
+      }
+  
+      // Find the order by ID and populate necessary fields
+      const order = await orderModel.findById(orderId)
+        .populate({ path: 'user_id' })
+        .populate({ path: 'product.product_id' });
+  
+      if (!order) {
+        return res.status(404).json({
+          success: false,
+          message: "Order Not Found"
+        });
+      }
+  
+      // Update the order status for the specified product
+      let productFound = false;
+      for (let prod = 0; prod < order.product.length; prod++) {
+        if (order.product[prod].product_id._id.toString() === productId) {
+          // Update order status
+          order.product[prod].order_status = orderStatus;
+  
+          // Handle the location update based on the location parameter
+          if (location) {
+            // Ensure delivery_location exists and is an array
+            if (!Array.isArray(order.product[prod].delivery_location)) {
+              order.product[prod].delivery_location = [];
+            }
+  
+            if (location === 'Accepted' || location === 'Cancelled') {
+              // If it's a known status, update the first entry's city
+              order.product[prod].delivery_location[0] = { city: location };  
+            } else {
+              // Otherwise, append a new location entry
+              order.product[prod].delivery_location.push({ city: location });
+            }
+          }
+  
+          productFound = true;
+          break;
+        }
+      }
+  
+      // If product is not found, return an error
+      if (!productFound) {
+        return res.status(404).json({
+          success: false,
+          message: "Product Not Found in Order"
+        });
+      }
+  
+      // Save the updated order
+      await order.save();
+  
+      // Return success response
+      return res.status(200).json({
+        success: true,
+        message: `${orderStatus} Successfully`,
+        data: order
+      });
+    } catch (err) {
+      console.error("Error updating order status: ", err);
+      return res.status(500).json({
+        success: false,
+        message: "Internal Server Error"
+      });
+    }
+  };
+  
 
