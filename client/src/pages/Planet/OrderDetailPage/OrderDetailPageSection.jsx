@@ -6,7 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DollarSignIcon, Package2, User2 } from "lucide-react";
+import { BanIcon, Check, DollarSignIcon, Package2, User2 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import useGetSingleOrder from "@/hooks/useGetSingleOrder";
 import { useSelector } from "react-redux";
@@ -87,12 +87,21 @@ const OrderDetailsPageSection = () => {
                   <TableHead className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
                     Price
                   </TableHead>
+                  <TableHead className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                    Stock
+                  </TableHead>
+                  <TableHead className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                    Action
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {order.product.map((prod, index) =>
+                {order.product.map((prod) =>
                   prod.product_id.planet_id === user._id ? (
-                    <TableRow key={prod.product_id} className="border-b">
+                    <TableRow
+                      key={prod.product_id}
+                      className="border-b hover:bg-gray-50 transition-colors"
+                    >
                       <TableCell className="px-4 py-3">
                         <img
                           src={prod.product_id.image}
@@ -108,6 +117,23 @@ const OrderDetailsPageSection = () => {
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800">
                         Rs. {prod.product_id.price || "N/A"}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800">
+                        {prod.product_id.stock || "N/A"}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 flex items-center gap-3">
+                        <button
+                          className="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 transition-all flex items-center justify-center"
+                          aria-label="Approve"
+                        >
+                          <Check className="w-5 h-5" />
+                        </button>
+                        <button
+                          className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600 transition-all flex items-center justify-center"
+                          aria-label="Reject"
+                        >
+                          <BanIcon className="w-5 h-5" />
+                        </button>
                       </TableCell>
                     </TableRow>
                   ) : null
