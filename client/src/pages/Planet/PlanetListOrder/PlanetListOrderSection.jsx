@@ -16,7 +16,6 @@ const PlanetListOrderSection = () => {
   const user = useSelector(store => store.planet.user)
   useGetAllPlanetOrder(user._id)
   const orders = useSelector((store) => store.planet.planetOrderList)
-  console.log(orders)
   const navigate = useNavigate();
   const handleViewDetail = (id) => {
     navigate(`/planet/order/view/${id}`)
@@ -55,7 +54,7 @@ const PlanetListOrderSection = () => {
                       <TableCell className='py-3 px-4'>{index + 1}</TableCell>
                       <TableCell className='py-3 px-4'>{order._id}</TableCell>
                       <TableCell className='py-3 px-4'>{order.totalQuantity || 'N/A'}</TableCell>
-                      <TableCell className='py-3 px-4'>${order.totalPrice || 'N/A'}</TableCell>
+                      <TableCell className='py-3 px-4'>Rs. {order.totalPrice || 'N/A'}</TableCell>
                       <TableCell className='py-3 px-4'>
                         <button className="text-blue-500 hover:text-blue-600 font-medium transition duration-150" onClick={() => handleViewDetail(order._id)}>View Details</button>
                       </TableCell>

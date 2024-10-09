@@ -10,7 +10,7 @@ ProductRoute.post('/add', isPlanetAuthenticated, productImageUploader, addProduc
 ProductRoute.get('/get/all', getProducts)
 ProductRoute.get('/get/:id', getProductsByID)
 ProductRoute.get('/get/planet/:id', getProductsByPlanet)
-ProductRoute.put('/update/:id', updateProduct)
+ProductRoute.put('/update/:id', isPlanetAuthenticated, productImageUploader, updateProduct)
 ProductRoute.post('/comment/add/:id', isAuthenticated, addRating)
 ProductRoute.delete('/delete/:id', deleteProduct)
 

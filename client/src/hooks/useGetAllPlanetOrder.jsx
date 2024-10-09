@@ -9,7 +9,6 @@ const useGetAllPlanetOrder = (id) => {
     useEffect(() => {
         const fetchAllPlanetOrder = async () => {
             try {
-                console.log(id)
                 const res = await axios.get(`${ORDER_API_END_POINT}/get/planet/${id}`, {withCredentials: true})
                 if (res.data.success) {
                     dispatch(setPlanetOrderList(res.data.data))
