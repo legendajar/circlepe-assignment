@@ -456,6 +456,118 @@ export const updateStatus = async (req, res) => {
         message: "Internal Server Error"
       });
     }
-  };
+};
   
+
+export const getPlanetOrdersByMonth = async (req, res) => {
+    try {
+        const planetId = req.params.id;
+        if (!planetId) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid Planet ID"
+            });
+        }
+
+        // Fetch products belonging to the planet
+        const products = await productModel.find({ planet_id: planetId });
+
+        if (!products || products.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No products found for this planet"
+            });
+        }
+
+        const productIds = products.map(product => product._id); // Extract product IDs
+
+        // Aggregate orders by month and year, filter by planet's products, and calculate earnings
+        const orders = await orderModel.aggregate([
+            { $unwind: "$product" },  // Unwind the products array to access individual products
+            { $match: { "product.product_id": { $in: productIds } } },  // Match orders containing the planet's products
+
+            // Lookup to populate `product_id` with product details from `productModel`
+            {
+                $lookup: {
+                    from: "products",  // The name of the collection for the `productModel`
+                    localField: "product.product_id",
+                    foreignField: "_id",
+                    as: "productDetails"
+                }
+            },
+
+            // Unwind the productDetails to replace product_id field
+            {
+                $unwind: "$productDetails"
+            },
+
+            // Replace the product_id field in the product with the actual product details
+            {
+                $addFields: {
+                    "product.product_id": "$productDetails"
+                }
+            },
+
+            // Remove the user field as requested
+            {
+                $project: {
+                    "user": 0
+                }
+            },
+
+            // Group by month and year
+            {
+                $group: {
+                    _id: {
+                        month: { $month: "$order_date" },  // Group by month
+                        year: { $year: "$order_date" }     // Group by year
+                    },
+                    totalEarnings: {
+                        $sum: { $multiply: ["$product.product_id.price", "$product.quantity"] }  // Calculate total earnings
+                    },
+                    orders: {
+                        $push: {
+                            product: "$product.product_id",  // Populated product details
+                            order: "$$ROOT"  // Push the entire order document for that month and year
+                        }
+                    }
+                }
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1 } }  // Sort by year and month
+        ]);
+
+        if (!orders || orders.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No orders found for this planet's products"
+            });
+        }
+
+        // Modify response to remove the `product` field from each order
+        const formattedOrders = orders.map(order => ({
+            month: order._id.month,
+            year: order._id.year,
+            totalEarnings: order.totalEarnings,
+            orders: order.orders.map(o => {
+                // Clone the order object
+                const modifiedOrder = { ...o };
+                // Remove the product field from the order
+                delete modifiedOrder.product;
+                return modifiedOrder;
+            })
+        }));
+
+        return res.status(200).json({
+            success: true,
+            data: formattedOrders
+        });
+
+    } catch (err) {
+        console.error(`Error fetching planet orders by month for planetId: ${req.params.id}`, err);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
 

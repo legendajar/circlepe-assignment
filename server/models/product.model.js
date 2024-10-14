@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const productSchema = new mongoose.Schema({
-    planet_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Planet', required: true },
+    planet_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Planet'},
     name: { type: String, required: true },
     price: { type: Number, required: true },
     stock: { type: Number, required: true },

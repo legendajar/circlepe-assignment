@@ -5,7 +5,8 @@ const orderSlice = createSlice({
     initialState: {
         singleOrder: null,
         orderList: [],
-        orderListSpaceStation: []
+        orderListSpaceStation: [],
+        ordersByMonth: []
     },
 
     reducers: {
@@ -19,10 +20,14 @@ const orderSlice = createSlice({
 
         setOrderListSpaceStation: (state, action) => {
             state.orderListSpaceStation = action.payload
+        },
+
+        setOrdersByMonth: (state, action) => {
+            state.ordersByMonth = action.payload
         }
     }
 })
 
-export const { setSingleOrder, setOrderList, setOrderListSpaceStation } = orderSlice.actions;
+export const { setSingleOrder, setOrderList, setOrderListSpaceStation, setOrdersByMonth } = orderSlice.actions;
 
 export default orderSlice.reducer;
