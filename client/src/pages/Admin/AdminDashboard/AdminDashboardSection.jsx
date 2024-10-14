@@ -2,7 +2,7 @@ import React from 'react'
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import AdminDashboardCard from '@/components/Admin/AdminDashboardCards.jsx/AdminDashboardCard';
-import { AdminDashboardChartData } from '@/components/Admin/AdminDashboardChartData./AdminDashboardChartData';
+import AdminDashboardChartData from '@/components/Admin/AdminDashboardChartData./AdminDashboardChartData';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 const AdminDashboardSection = () => {
