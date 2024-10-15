@@ -13,7 +13,7 @@ const spaceStationSlice = createSlice({
         },
 
         setSpaceStationList: (state, action) => {
-            state.user = action.payload
+            state.spaceStationList = action.payload
         }
     }
 })

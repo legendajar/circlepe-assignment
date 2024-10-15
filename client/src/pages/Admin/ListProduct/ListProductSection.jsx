@@ -7,11 +7,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import useGetAllProduct from "@/hooks/useGetAllProduct"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const ListProductSection = () => {
     useGetAllProduct();
-    const dispatch = useDispatch();
     const { productList } = useSelector(store => store.product)
     return (
         <div className='w-full h-full rounded-md shadow-xl p-2'>
