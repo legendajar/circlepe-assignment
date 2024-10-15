@@ -12,11 +12,12 @@ import { useSelector } from "react-redux";
 import useGetAllProduct from "@/hooks/useGetAllProduct";
 import { Link } from "react-router-dom";
 
+
 const ListPlanetSection = () => {
   useGetAllPlanets();
   useGetAllProduct();
   const { planetList } = useSelector((store) => store.planet);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("")
   // Filter the planet list based on the search query
   const filteredPlanets = planetList
     ? planetList.filter((planet) =>
@@ -24,16 +25,16 @@ const ListPlanetSection = () => {
       )
     : [];
 
-  const productList = useSelector((store) => store.product.productList);
+  const productList = useSelector(store => store.product. productList)
   const planetProductCount = (planetId) => {
-    let count = 0;
+    let count = 0
     for (let i = 0; i < productList.length; i++) {
       if (productList[i].planet_id === planetId) {
-        count++;
+        count++
       }
     }
-    return count;
-  };
+    return count
+  }
   return (
     <div className="w-full h-full p-6 bg-white rounded-md shadow-xl">
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Planet List</h1>
@@ -60,24 +61,12 @@ const ListPlanetSection = () => {
         <Table className="min-w-full">
           <TableHeader>
             <TableRow className="bg-gray-100">
-              <TableHead className="p-4 text-center text-gray-600">
-                S.No
-              </TableHead>
-              <TableHead className="p-4 text-center text-gray-600">
-                Planet ID
-              </TableHead>
-              <TableHead className="p-4 text-center text-gray-600">
-                Planet Name
-              </TableHead>
-              <TableHead className="p-4 text-center text-gray-600">
-                Planet Mobile
-              </TableHead>
-              <TableHead className="p-4 text-center text-gray-600">
-                Planet Email
-              </TableHead>
-              <TableHead className="p-4 text-center text-gray-600">
-                Planet Product Count
-              </TableHead>
+              <TableHead className="p-4 text-center text-gray-600">S.No</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">Planet ID</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">Planet Name</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">Planet Mobile</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">Planet Email</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">Planet Product Count</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -89,40 +78,21 @@ const ListPlanetSection = () => {
                     index % 2 === 0 ? "bg-gray-50" : "bg-white"
                   }`}
                 >
-                  <TableCell className="p-4">
-                    <Link to={`/admin/planet/${planet._id}`}>{index + 1}</Link>
-                  </TableCell>
-                  <TableCell className="p-4 text-center">
-                    <Link to={`/admin/planet/${planet._id}`}>{planet._id}</Link>
-                  </TableCell>
+                  <TableCell className="p-4">{index + 1}</TableCell>
                   <TableCell className="p-4 text-center">
                     <Link to={`/admin/planet/${planet._id}`}>
-                      {planet.name}
+                      {planet._id}
                     </Link>
                   </TableCell>
-                  <TableCell className="p-4 text-center">
-                    <Link to={`/admin/planet/${planet._id}`}>
-                      {planet.mobile}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="p-4 text-center">
-                    <Link to={`/admin/planet/${planet._id}`}>
-                      {planet.email}
-                    </Link>
-                  </TableCell>
-                  <TableCell className="p-4 text-center">
-                    <Link to={`/admin/planet/${planet._id}`}>
-                      {planetProductCount(planet._id)}
-                    </Link>
-                  </TableCell>
+                  <TableCell className="p-4 text-center">{planet.name}</TableCell>
+                  <TableCell className="p-4 text-center">{planet.mobile}</TableCell>
+                  <TableCell className="p-4 text-center">{planet.email}</TableCell>
+                  <TableCell className='p-4 text-center'>{planetProductCount(planet._id)}</TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell
-                  colSpan={6}
-                  className="p-4 text-center text-gray-500"
-                >
+                <TableCell colSpan={6} className="p-4 text-center text-gray-500">
                   No Data Found
                 </TableCell>
               </TableRow>
