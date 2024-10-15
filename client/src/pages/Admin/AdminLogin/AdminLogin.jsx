@@ -8,12 +8,16 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import platform from 'platform'
+import getIpAddress from '@/utils/getIPAddress'
+import getLocationByIp from '@/utils/locationDetection'
 
 const AdminLogin = () => {
   const [visible, setVisible] = useState(false)
   const visibleHandler = () => {
     setVisible(!visible)
   }
+  
   const [input, setInput] = useState({
     email: "",
     password: ""
@@ -30,89 +34,129 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const { user } = useSelector(store => store.admin)
 
-  const submitHandler = async(e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("email", input.email);
-    formData.append("password", input.password);
+    const os = `${platform.os.family}`;
+    const deviceName = platform.product;
 
     try {
-      const res = await axios.post(`${ADMIN_API_END_POINT}/login`, formData , {
+      const ip = await getIpAddress();
+
+      // Get Location By IP
+      const locationRes = await getLocationByIp(ip);
+      const location = `${locationRes.data.city}, ${locationRes.data.region}, ${locationRes.data.country}`;
+
+      const formData = new FormData();
+      formData.append("email", input.email);
+      formData.append("password", input.password);
+      formData.append("os", os);
+      formData.append("deviceName", deviceName);
+      formData.append("ip", ip);
+      formData.append("location", location);
+
+      const res = await axios.post(`${ADMIN_API_END_POINT}/login`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
-      })
+        withCredentials: true
+      });
 
-      if(res.data.success) {
-        dispatch(setUser(res.data.user))
-        navigate("/admin/dashboard")
+      if (res.data.success) {
+        dispatch(setUser(res.data.user));
+        navigate("/admin/dashboard");
+        alert(res.data.message);
+      } else {
+        alert(res.data.message);
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      alert("An error occurred while logging in. Please try again!");
     }
   }
 
   useEffect(() => {
     if (user) {
-      navigate("/admin/dashboard")
+      navigate("/admin/dashboard");
       return;
     }
-  }, [])
+  }, [user, navigate]);
 
   return (
-    <div>
-  <div className='w-full h-16 bg-bodyColor'>
-    <h3 className='text-2xl uppercase font-bold text-designColor px-5 py-4'>InterGalactic Store</h3>
-  </div>
-
-  <div className='flex items-center justify-center max-w-7xl mx-auto'>
-    <form 
-      onSubmit={submitHandler} 
-      className='w-full max-w-md border border-gray-200 rounded-md p-4 my-10 px-4 py-6 shadow-md
-        sm:w-smd 
-        md:w-sml 
-        lg:w-md
-      '
-    >
-      <h1 className='font-bold text-xl mb-5'>Admin Login</h1>
-      <div className='my-5'>
-        <Label htmlFor='email'>Email</Label>
-        <Input 
-          type='email' 
-          className='w-full p-2 border border-gray-300 rounded-md' 
-          placeholder='Email' 
-          name='email' 
-          value={input.email} 
-          onChange={changeInputHandler} 
-        />
-      </div>
-      <div className='my-5'>
-        <Label htmlFor='password'>Password</Label>
-        <div className='flex items-center justify-between'>
-          <Input 
-            type={visible ? 'text' : 'password'} 
-            placeholder='Password' 
-            name='password' 
-            value={input.password} 
-            onChange={changeInputHandler} 
-            className='w-full p-2 border border-gray-300 rounded-md'
-          />
-          {
-            visible ? (
-              <span className='w-12 h-12 flex items-center justify-center rounded-md cursor-pointer' onClick={visibleHandler}><Eye /></span>
-            ) : (
-              <span className='w-12 h-12 flex items-center justify-center rounded-md cursor-pointer' onClick={visibleHandler}><EyeOff /></span>
-            )
-          }
+    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="relative bg-white py-8 px-6 shadow-lg rounded-lg max-w-md mx-auto">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-6">
+          Admin Login
+        </h2>
+        <form onSubmit={submitHandler} className="space-y-6">
+          <div>
+            <Label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Email
+            </Label>
+            <Input
+              type="email"
+              id="email"
+              name="email"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Email"
+              value={input.email}
+              onChange={changeInputHandler}
+            />
+          </div>
+          <div>
+            <Label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Password
+            </Label>
+            <div className="relative">
+              <Input
+                type={visible ? "text" : "password"}
+                id="password"
+                name="password"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Password"
+                value={input.password}
+                onChange={changeInputHandler}
+              />
+              <span
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={visibleHandler}
+              >
+                {visible ? (
+                  <Eye className="text-gray-500" />
+                ) : (
+                  <EyeOff className="text-gray-500" />
+                )}
+              </span>
+            </div>
+          </div>
+          <div>
+            <Button
+              type="submit"
+              className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              Login
+            </Button>
+          </div>
+        </form>
+        <div className="mt-6 text-center">
+          <p className="text-gray-600 text-sm mt-2">
+            <Link
+              to="/admin/reset/password"
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              Forgot password? Reset it here
+            </Link>
+          </p>
         </div>
       </div>
-      <Button className='w-full p-2 my-5 bg-designColor rounded-md text-black font-bold'>Login</Button>
-    </form>
-  </div>
-</div>
-
+    </div>
   )
 }
 
-export default AdminLogin
+export default AdminLogin;
