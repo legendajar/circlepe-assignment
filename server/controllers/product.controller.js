@@ -36,15 +36,22 @@ export const addProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await productModel.find()
+        // Fetch products and populate the 'planet_id' field with the related Planet document
+        const products = await productModel.find().populate('planet_id'); // Ensure 'planet_id' is the field that references the Planet model
+        
         return res.status(200).json({
             success: true,
             data: products
-        })
+        });
     } catch (err) {
-        console.log(err)
+        console.error('Error fetching products:', err);
+        return res.status(500).json({
+            success: false,
+            message: 'Server error. Please try again later.'
+        });
     }
-}
+};
+
 
 export const getProductsByID = async (req, res) => {
     try {
