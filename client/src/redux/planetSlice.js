@@ -5,7 +5,8 @@ const planetSlice = createSlice({
     initialState: {
         user: null,
         planetList: [],
-        planetOrderList: []
+        planetOrderList: [],
+        singlePlanet: null
     },
 
     reducers: {
@@ -19,10 +20,14 @@ const planetSlice = createSlice({
 
         setPlanetOrderList: (state, action) => {
             state.planetOrderList = action.payload
+        },
+
+        setSinglePlanet: (state, action) => {
+            state.singlePlanet = action.payload
         }
     }
 })
 
-export const { setUser,setPlanetList, setPlanetOrderList } = planetSlice.actions;
+export const { setUser,setPlanetList, setPlanetOrderList, setSinglePlanet } = planetSlice.actions;
 
 export default planetSlice.reducer;

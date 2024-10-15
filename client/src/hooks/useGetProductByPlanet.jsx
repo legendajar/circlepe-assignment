@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 
 const useGetProductByPlanet = (refresh, id) => {
   const dispatch = useDispatch();
-  
   useEffect(() => {
     const fetchProductByPlanet = async () => {
         try {

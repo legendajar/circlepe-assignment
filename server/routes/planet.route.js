@@ -9,7 +9,7 @@ PlanetRoute.post('/register', addPlanet)
 PlanetRoute.post('/login', login)
 PlanetRoute.post('/logout', isPlanetAuthenticated, logout)
 PlanetRoute.get('/all', getAllPlanet)
-PlanetRoute.get('/get/:id', isPlanetAuthenticated, getPlanetById)
+PlanetRoute.get('/get/:id', getPlanetById)
 PlanetRoute.put('/update/:id', isPlanetAuthenticated, updatePlanet)
 PlanetRoute.delete('/delete/:id', deletePlanet)
 

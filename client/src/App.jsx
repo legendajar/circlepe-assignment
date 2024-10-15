@@ -32,6 +32,7 @@ import ResetPassword from "./pages/SpaceStations/ResetPassword/ResetPassword";
 import ResetPasswordForm from "./pages/SpaceStations/ResetPassword/ResetPasswordForm";
 import OrderDetailsPage from "./pages/Planet/OrderDetailPage/OrderDetailPage";
 import UpdateProduct from "./pages/Planet/UpdateProduct/UpdateProduct";
+import PlanetProfilePage from "./pages/Admin/PlanetProfilePage/PlanetProfilePage";
 
 
 const appRouter = createBrowserRouter([
@@ -55,6 +56,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/planet/find',
     element: <FindPlanet />
+  },
+
+  {
+    path: '/admin/planet/:id',
+    element: <PlanetProfilePage />
   },
 
   {

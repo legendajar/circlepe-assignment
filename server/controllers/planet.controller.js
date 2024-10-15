@@ -215,16 +215,22 @@ export const getPlanetById = async (req, res) => {
             })
         }
 
-        const planet = await productModel.findOne({ planet_id: id });
+        const planet = await planetModel.findById(id);
         if (!planet) {
             return res.status(404).json({
                 sucess: false,
                 message: "Planet Not Found"
             })
-        }
+        } 
         return res.status(200).json({
             success: true,
-            data: planet
+            data: {
+                _id: planet._id,
+                name: planet.name,
+                mobile: planet.mobile,
+                email: planet.email,
+                createdAt: planet.createdAt
+            }
         })
     } catch (err) {
         console.log(err);
