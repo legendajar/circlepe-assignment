@@ -10,6 +10,7 @@ import {
 import useGetAllSpaceStation from "@/hooks/useGetAllSpaceStation";
 import { useSelector } from "react-redux";
 import useGetAllOrder from "@/hooks/useGetAllOrder";
+import { Link } from "react-router-dom";
 
 const ListSpaceStationSection = () => {
     useGetAllSpaceStation();
@@ -63,6 +64,7 @@ const ListSpaceStationSection = () => {
           <TableHeader>
             <TableRow className="bg-gray-100">
               <TableHead className="p-4 text-left text-gray-600">S.No</TableHead>
+              <TableHead className="p-4 text-center text-gray-600">ID</TableHead>
               <TableHead className="p-4 text-center text-gray-600">Name</TableHead>
               <TableHead className="p-4 text-center text-gray-600">Email</TableHead>
               <TableHead className="p-4 text-center text-gray-600">Mobile</TableHead>
@@ -79,6 +81,10 @@ const ListSpaceStationSection = () => {
                   }`}
                 >
                   <TableCell className="p-4">{index + 1}</TableCell>
+                  <TableCell className="p-4 text-center">
+                  <Link to={`/admin/spacestation/${spaceStation._id}`}>
+                  {spaceStation._id}
+                  </Link></TableCell>
                   <TableCell className="p-4 text-center">{spaceStation.name}</TableCell>
                   <TableCell className="p-4 text-center">{spaceStation.email}</TableCell>
                   <TableCell className="p-4 text-center">{spaceStation.mobile}</TableCell>
