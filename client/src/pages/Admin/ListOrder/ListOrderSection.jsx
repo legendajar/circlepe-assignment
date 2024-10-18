@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import useGetAllOrder from "@/hooks/useGetAllOrder";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ListOrderSection = () => {
   useGetAllOrder();
@@ -59,7 +60,11 @@ const ListOrderSection = () => {
                   }`}
                 >
                   <TableCell className="p-4">{index + 1}</TableCell>
-                  <TableCell className="p-4">{order._id}</TableCell>
+                  <TableCell className="p-4">
+                    <Link to={`/admin/spacestation/order/${order._id}`}>
+                      {order._id}
+                    </Link>
+                  </TableCell>
                   <TableCell className="p-4">{order.transaction_id}</TableCell>
                   <TableCell className="p-4">{order.payment_method}</TableCell>
                   <TableCell className="p-4">{order.transaction_status}</TableCell>

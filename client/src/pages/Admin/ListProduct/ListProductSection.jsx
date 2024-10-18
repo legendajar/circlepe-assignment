@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import useGetAllProduct from "@/hooks/useGetAllProduct";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ListProductSection = () => {
   useGetAllProduct();
@@ -63,7 +64,11 @@ const ListProductSection = () => {
                   }`}
                 >
                   <TableCell className="p-4">{index + 1}</TableCell>
-                  <TableCell className="p-4">{product._id}</TableCell>
+                  <TableCell className="p-4">
+                    <Link to={`/admin/product/${product._id}`}>
+                      {product._id}
+                    </Link>
+                  </TableCell>
                   <TableCell className="p-4">
                     <img
                       src={product.image}

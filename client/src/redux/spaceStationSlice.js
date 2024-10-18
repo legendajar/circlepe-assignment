@@ -4,7 +4,8 @@ const spaceStationSlice = createSlice({
     name: "spaceStation",
     initialState: {
         user: null,
-        spaceStationList: []
+        spaceStationList: [], 
+        singleSpaceStation: null
     },
 
     reducers: {
@@ -14,10 +15,14 @@ const spaceStationSlice = createSlice({
 
         setSpaceStationList: (state, action) => {
             state.spaceStationList = action.payload
+        },
+
+        setSingleSpaceStation: (state, action) => {
+            state.singleSpaceStation = action.payload
         }
     }
 })
 
-export const { setUser, setSpaceStationList } = spaceStationSlice.actions;
+export const { setUser, setSpaceStationList, setSingleSpaceStation } = spaceStationSlice.actions;
 
 export default spaceStationSlice.reducer;

@@ -2,7 +2,7 @@ import useGetPlanetById from "@/hooks/useGetPlanetById";
 import useGetProductByPlanet from "@/hooks/useGetProductByPlanet";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   Table,
   TableBody,
@@ -104,7 +104,7 @@ const PlanetProfilePageSection = () => {
                         className="h-16 w-16 object-cover rounded-lg border border-gray-200"
                       />
                     </TableCell>
-                    <TableCell className="px-6 py-4">{product.name}</TableCell>
+                    <TableCell className="px-6 py-4"><Link to={`/admin/product/${product._id}`}>{product.name}</Link></TableCell>
                     <TableCell className="px-6 py-4">{product.category}</TableCell>
                     <TableCell className="px-6 py-4">${product.price}</TableCell>
                     <TableCell className="px-6 py-4">{product.stock}</TableCell>

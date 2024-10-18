@@ -31,11 +31,10 @@ const Navbar = () => {
   };
   return (
     <div>
-      <div className="sm:w-full w-full h-16 bg-bodyColor">
+      <div className="fixed top-0 left-0 right-0 w-full h-16 bg-bodyColor z-50">
         <div className="flex justify-between items-center">
           <h3 className="text-lg mdl:text-2xl uppercase font-bold text-designColor px-5 py-4">
-            {" "}
-            InterGalatic Store{" "}
+            InterGalatic Store
           </h3>
           <div className="mx-5">
             <Popover>

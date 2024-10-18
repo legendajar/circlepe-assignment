@@ -34,6 +34,9 @@ import OrderDetailsPage from "./pages/Planet/OrderDetailPage/OrderDetailPage";
 import UpdateProduct from "./pages/Planet/UpdateProduct/UpdateProduct";
 import PlanetProfilePage from "./pages/Admin/PlanetProfilePage/PlanetProfilePage";
 import SpaceStationProfilePage from "./pages/Admin/SpaceStationProfilePage/SpaceStationProfilePage";
+import OrderDetailPage from "./pages/Admin/OrderDetailPage/OrderDetailPage";
+import ProductDetailPage from "./pages/Admin/ProductDetailPage/ProductDetailPage";
+
 
 
 const appRouter = createBrowserRouter([
@@ -90,6 +93,11 @@ const appRouter = createBrowserRouter([
   },
 
   {
+    path: '/admin/product/:id',
+    element: <ProductDetailPage />
+  },
+
+  {
     path: '/admin/transaction/list',
     element: <ListTransaction />
   },
@@ -107,6 +115,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/order/view',
     element: <ListOrder />
+  },
+
+  {
+    path: '/admin/spacestation/order/:id',
+    element: <OrderDetailPage />
   },
 
   // Planet Route

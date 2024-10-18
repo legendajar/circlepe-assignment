@@ -210,7 +210,7 @@ export const getOrder = async (req, res) => {
 
 export const getOrderByUserId = async (req, res) => {
     try {
-        const id = req.id;
+        const id = req.params.id;
         if (!id) {
             return res.status(404).json({
                 success: false,
