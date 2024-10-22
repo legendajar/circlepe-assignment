@@ -1,4 +1,3 @@
-// components/UpdateProfile.js
 import { SPACE_STATION_API_END_POINT } from "@/utils/URLS";
 import axios from "axios";
 import { useState } from "react";
@@ -8,14 +7,17 @@ import { useParams } from "react-router-dom";
 
 const UpdateProfile = () => {
   const params = useParams();
-  const id = params.id
+  const id = params.id;
   const dispatch = useDispatch();
+  
   const [input, setInput] = useState({
     name: "",
     email: "",
     mobile: "",
     file: null
   });
+
+  const [loading, setLoading] = useState(false); // Loading state
 
   const changeInputHandler = (e) => {
     setInput({
@@ -33,6 +35,7 @@ const UpdateProfile = () => {
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submission starts
 
     const formData = new FormData();
     formData.append("name", input.name);
@@ -49,14 +52,15 @@ const UpdateProfile = () => {
       });
 
       if (res.data.success) {
-        // Dispatch action to update user in Redux store
-        dispatch(setUser(res.data.user));
+        dispatch(setUser(res.data.user)); // Dispatch action to update user in Redux store
         alert(res.data.message);
       } else {
         alert(res.data.message);
       }
     } catch (err) {
-      console.log(err);
+      console.error("Error updating profile:", err);
+    } finally {
+      setLoading(false); // Set loading to false after request is done
     }
   };
 
@@ -80,7 +84,7 @@ const UpdateProfile = () => {
               type="file"
               id="image"
               accept="image/*"
-              name='file'
+              name="file"
               className="file:border-none file:bg-designColor file:text-white file:px-4 file:py-2 file:rounded-md file:cursor-pointer"
               onChange={fileInputHandler}
             />
@@ -95,7 +99,7 @@ const UpdateProfile = () => {
           <input
             type="text"
             id="name"
-            name='name'
+            name="name"
             onChange={changeInputHandler}
             value={input.name}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-designColor"
@@ -112,7 +116,7 @@ const UpdateProfile = () => {
           <input
             type="email"
             id="email"
-            name='email'
+            name="email"
             onChange={changeInputHandler}
             value={input.email}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-designColor"
@@ -129,7 +133,7 @@ const UpdateProfile = () => {
           <input
             type="number"
             id="mobile"
-            name='mobile'
+            name="mobile"
             onChange={changeInputHandler}
             value={input.mobile}
             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-designColor"
@@ -138,13 +142,44 @@ const UpdateProfile = () => {
           />
         </div>
 
-        {/* Submit Button */}
+        {/* Loading Spinner or Submit Button */}
         <button
           type="submit"
-          className="w-full bg-designColor text-black py-2 rounded-md hover:bg-opacity-90 transition duration-200"
+          className={`w-full py-2 rounded-md text-black ${
+            loading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-designColor hover:bg-opacity-90 transition duration-200"
+          }`}
+          disabled={loading} // Disable button while loading
         >
-          Update Profile
+          {loading ? "Updating..." : "Update Profile"}
         </button>
+
+        {/* Optionally show loading spinner */}
+        {loading && (
+          <div className="flex justify-center mt-4">
+            <svg
+              className="animate-spin h-5 w-5 text-blue-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0a12 12 0 00-12 12h4z"
+              ></path>
+            </svg>
+          </div>
+        )}
       </form>
     </div>
   );
