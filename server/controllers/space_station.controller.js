@@ -159,8 +159,6 @@ export const login = async (req, res) => {
   }
 };
 
-  
-
 export const logout = async (req, res) => {
   try {
     return res
@@ -345,7 +343,6 @@ export const deleteSpaceStation = async (req, res) => {
     });
   }
 };
-
 
 export const changePassword = async (req, res) => {
   try {
@@ -655,6 +652,35 @@ export const resetPassword = async (req, res) => {
       message: "Password reset successfully"
     })
 
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error"
+    })
+  }
+}
+
+export const deleteAddress = async (req, res) => {
+  const spaceStationId = req.params.id
+  const addressIndex = req.body
+
+  try {
+    const spaceStation = await spaceStationModel.findById(spaceStationId)
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found"
+      })
+    }
+
+    spaceStation.address.splice(addressIndex, 1)
+    await spaceStation.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "Address deleted successfully"
+    })
   } catch (err) {
     console.log(err)
     return res.status(500).json({

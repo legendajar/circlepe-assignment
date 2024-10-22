@@ -5,7 +5,7 @@ const spaceStationSchema = new mongoose.Schema({
     email: { type: String, unique: true, required: true },
     mobile: { type: String, required: true },
     password: { type: String, required: true },
-    image: { type: String },
+    image: { type: String, default: "https://www.google.com/images/branding/googlelogo/1x/googlelogo_light_color_272x92dp.png" },
     address: [{
         name: {type: String, required: true},
         mobile: {type: String, required: true},

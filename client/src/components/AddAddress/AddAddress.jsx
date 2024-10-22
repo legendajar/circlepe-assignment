@@ -1,10 +1,14 @@
-import { SPACE_STATION_API_END_POINT } from '@/utils/URLS';
-import axios from 'axios';
-import { useState, useRef, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { setLoading } from "@/redux/loadingSlice";
+import { SPACE_STATION_API_END_POINT } from "@/utils/URLS";
+import axios from "axios";
+import { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddAddress = ({ closeForm, onAddressAdded }) => {
-  const { id } = useSelector(store => store.spaceStation.user);
+  const { id } = useSelector((store) => store.spaceStation.user);
+  const { loading } = useSelector((store) => store.loading);
+  const dispatch = useDispatch();
+
   const [addAddress, setAddAddress] = useState({
     name: "",
     mobile: "",
@@ -13,7 +17,7 @@ const AddAddress = ({ closeForm, onAddressAdded }) => {
     city: "",
     state: "",
     country: "",
-    pincode: ""
+    pincode: "",
   });
 
   // Reference to the form container
@@ -22,7 +26,7 @@ const AddAddress = ({ closeForm, onAddressAdded }) => {
   const changeInputHandler = (e) => {
     setAddAddress({
       ...addAddress,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -30,26 +34,42 @@ const AddAddress = ({ closeForm, onAddressAdded }) => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    dispatch(setLoading(true)); // Set loading to true
+
     try {
       const res = await axios.post(
         `${SPACE_STATION_API_END_POINT}/add/address/${id}`,
         addAddress,
         {
           headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          withCredentials: true
+          withCredentials: true,
         }
       );
 
+      // Inside your try block, this part is already correct:
       if (res.data.success) {
         alert(res.data.message);
-        onAddressAdded(addAddress); // Notify the Addresses component about the new address
+        onAddressAdded(addAddress); // Notify the parent component (Addresses) about the new address
+        // Reset form fields after success
+        setAddAddress({
+          name: "",
+          mobile: "",
+          firstLine: "",
+          secondLine: "",
+          city: "",
+          state: "",
+          country: "",
+          pincode: "",
+        });
       } else {
         alert(res.data.message);
       }
     } catch (err) {
       console.log(err);
+    } finally {
+      dispatch(setLoading(false)); // Set loading back to false
     }
   };
 
@@ -61,10 +81,10 @@ const AddAddress = ({ closeForm, onAddressAdded }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [closeForm]);
 
@@ -149,10 +169,13 @@ const AddAddress = ({ closeForm, onAddressAdded }) => {
             Cancel
           </button>
           <button
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            onClick={handleFormSubmit} // Handle form submission
+            className={`bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            onClick={handleFormSubmit}
+            disabled={loading} // Disable button when loading
           >
-            Save
+            {loading ? "Saving..." : "Save"}
           </button>
         </div>
       </div>

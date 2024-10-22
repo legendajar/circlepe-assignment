@@ -3,66 +3,87 @@ import useGetSpaceStationById from "@/hooks/useGetSpaceStationById";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import axios from "axios";
+import { SPACE_STATION_API_END_POINT } from "@/utils/URLS";
 
 const Addresses = () => {
   const params = useParams();
   const id = params.id;
-  
-  // State to control data refresh
-  const [refreshData, setRefreshData] = useState(false);
 
-  // Trigger data fetch on component mount and when refreshData changes
+  // State to control data refresh and errors
+  const [refreshData, setRefreshData] = useState(false);
+  const [deleteError, setDeleteError] = useState(null);
+
+  // Fetch data on mount and on refreshData change
   useGetSpaceStationById(id, refreshData);
 
-  const addresses = useSelector((store) => store.spaceStation.user.address);
+  const addresses = useSelector((store) => store.spaceStation.singleSpaceStation?.address || []);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
 
-  // Function to handle showing the AddAddress form
-  const handleAddAddressClick = () => {
-    setShowAddAddressForm(true);
-  };
+  // Handlers for adding and deleting addresses
+  const handleAddAddressClick = () => setShowAddAddressForm(true);
+  const closeAddAddressForm = () => setShowAddAddressForm(false);
 
-  // Function to handle closing the AddAddress form
-  const closeAddAddressForm = () => {
-    setShowAddAddressForm(false);
-  };
-
-  // Callback function to refresh data after adding an address
   const handleAddressAdded = () => {
     setShowAddAddressForm(false);
-    setRefreshData((prev) => !prev); // Toggle refreshData to trigger data refresh
+    setRefreshData((prev) => !prev);
+  };
+
+  const handleDeleteAddress = async (addressIndex) => {
+    try {
+      const res = await axios.delete(`${SPACE_STATION_API_END_POINT}/deleteAddress/${id}`, {
+        data: { index: addressIndex },
+        withCredentials: true,
+      });
+
+      if (res.data.success) {
+        setDeleteError(null);
+        setRefreshData((prev) => !prev);
+      } else {
+        setDeleteError(`Failed to delete address: ${res.data.message}`);
+      }
+    } catch (error) {
+      setDeleteError(`Error deleting address: ${error.message}`);
+    }
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4">
+    <div className="flex flex-col gap-6 p-6 bg-gray-50 min-h-screen">
       {/* Add Address Button */}
       <button
-        className="flex items-center justify-center bg-white shadow-md rounded-lg p-6 border border-gray-200 cursor-pointer hover:bg-gray-100"
+        className="flex items-center justify-center bg-blue-500 text-white font-medium py-3 px-6 rounded-lg shadow hover:bg-blue-600 transition-all duration-150 ease-in-out"
         onClick={handleAddAddressClick}
       >
-        <div className="text-lg font-semibold text-blue-500">+ Add Address</div>
+        + Add New Address
       </button>
+
+      {/* Display delete error message */}
+      {deleteError && (
+        <div className="text-red-600 bg-red-100 border border-red-200 p-4 rounded-lg">
+          {deleteError}
+        </div>
+      )}
 
       {/* Address List */}
       {addresses.length > 0 ? (
         addresses.map((address, index) => (
           <div
             key={index}
-            className="bg-white shadow-md rounded-lg p-6 border border-gray-200"
+            className="relative bg-white shadow-md rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-all duration-150 ease-in-out"
           >
-            <h3 className="text-lg font-semibold mb-2">Address {index + 1}</h3>
-            <div className="flex flex-col gap-2">
+            <h3 className="text-lg font-semibold text-gray-800 mb-3">Address {index + 1}</h3>
+            <div className="text-sm text-gray-700 space-y-2">
               <div className="flex justify-between">
-                <span className="font-medium text-gray-600">Name:</span>
-                <span className="text-gray-800">{address.name}</span>
+                <span className="font-medium">Name:</span>
+                <span>{address.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium text-gray-600">Mobile:</span>
-                <span className="text-gray-800">{address.mobile}</span>
+                <span className="font-medium">Mobile:</span>
+                <span>{address.mobile}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="font-medium text-gray-600">Address:</span>
-                <span className="text-gray-800">
+              <div>
+                <span className="font-medium">Address:</span>
+                <p className="text-sm">
                   {address.firstLine}
                   <br />
                   {address.secondLine && (
@@ -74,22 +95,31 @@ const Addresses = () => {
                   {address.city}, {address.state} {address.pincode}
                   <br />
                   {address.country}
-                </span>
+                </p>
               </div>
             </div>
+            {/* Delete Address Button */}
+            <button
+              className="absolute top-3 right-3 bg-red-500 text-white text-sm py-2 px-4 rounded-lg hover:bg-red-600 transition-all duration-150 ease-in-out"
+              onClick={() => handleDeleteAddress(index)}
+            >
+              Delete
+            </button>
           </div>
         ))
       ) : (
         <div className="bg-white shadow-md rounded-lg p-6 border border-gray-200 text-center">
-          <h3 className="text-lg font-semibold mb-4">No Addresses Found</h3>
-          <p className="text-gray-600 mb-4">
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">No Addresses Found</h3>
+          <p className="text-gray-600">
             You currently don't have any saved addresses.
           </p>
         </div>
       )}
 
       {/* Add Address Form Modal */}
-      {showAddAddressForm && <AddAddress closeForm={closeAddAddressForm} onAddressAdded={handleAddressAdded} />}
+      {showAddAddressForm && (
+        <AddAddress closeForm={closeAddAddressForm} onAddressAdded={handleAddressAdded} />
+      )}
     </div>
   );
 };

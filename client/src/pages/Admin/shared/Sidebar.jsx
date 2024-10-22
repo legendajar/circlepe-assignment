@@ -9,6 +9,7 @@ import {
     Eclipse,
     LayoutDashboard,
     List,
+    PlusSquareIcon,
     Satellite,
     Search,
     ShoppingBag,
@@ -155,6 +156,58 @@ import {
                       <li className="w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black">
                         <Search />
                         <span className="hidden md:inline">Find Orders</span>
+                      </li>
+                    </Link>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Warehouse Section */}
+              <AccordionItem value="item-6">
+                <AccordionTrigger className="group hover:bg-designColor hover:text-black">
+                  <div className="mx-5 flex items-center gap-2">
+                    <ShoppingBag />
+                    <span className="hidden md:inline">Warehouse</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="my-2 flex flex-col items-center justify-center gap-1">
+                    <Link to="/admin/order/view" className="w-full">
+                      <li className="w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black">
+                        <PlusSquareIcon />
+                        <span className="hidden md:inline">Add Warehouse</span>
+                      </li>
+                    </Link>
+                    <Link to="/admin/order/find" className="w-full">
+                      <li className="w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black">
+                        <Search />
+                        <span className="hidden md:inline">View Warehouse</span>
+                      </li>
+                    </Link>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Deleiver Agent Section */}
+              <AccordionItem value="item-7">
+                <AccordionTrigger className="group hover:bg-designColor hover:text-black">
+                  <div className="mx-5 flex items-center gap-2">
+                    <ShoppingBag />
+                    <span className="hidden md:inline">Delivery Agent</span>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="my-2 flex flex-col items-center justify-center gap-1">
+                    <Link to="/admin/order/view" className="w-full">
+                      <li className="w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black">
+                        <PlusSquareIcon />
+                        <span className="hidden md:inline">Delivery Agent Request</span>
+                      </li>
+                    </Link>
+                    <Link to="/admin/order/find" className="w-full">
+                      <li className="w-full h-10 flex items-center justify-center gap-2 group hover:bg-designColor hover:text-black">
+                        <Search />
+                        <span className="hidden md:inline">View Delivery Agent</span>
                       </li>
                     </Link>
                   </ul>

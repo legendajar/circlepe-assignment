@@ -5,6 +5,7 @@ import { SPACE_STATION_API_END_POINT } from "@/utils/URLS.js";
 import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
@@ -29,6 +30,9 @@ const Register = () => {
   };
 
   const navigate = useNavigate();
+
+  const loading = useSelector(store => store.loading)
+
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -55,6 +59,8 @@ const Register = () => {
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(true);
     }
   };
 
@@ -158,12 +164,24 @@ const Register = () => {
               </span>
             </div>
           </div>
-          <Button
+          {
+            loading ? (
+              <Button
+            type="submit"
+            className="w-full py-4 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            Loading...
+          </Button>
+            ) : (
+              <Button
             type="submit"
             className="w-full py-4 px-4 bg-indigo-600 text-white font-semibold rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
             Register
           </Button>
+            )
+          }
+          
           <div className="text-sm text-center text-gray-500 mt-4">
             Already have an account?{" "}
             <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">

@@ -36,6 +36,7 @@ import PlanetProfilePage from "./pages/Admin/PlanetProfilePage/PlanetProfilePage
 import SpaceStationProfilePage from "./pages/Admin/SpaceStationProfilePage/SpaceStationProfilePage";
 import OrderDetailPage from "./pages/Admin/OrderDetailPage/OrderDetailPage";
 import ProductDetailPage from "./pages/Admin/ProductDetailPage/ProductDetailPage";
+import AddWarehouse from "./pages/Admin/AddWarehouse/AddWarehouse";
 
 
 
@@ -120,6 +121,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/admin/spacestation/order/:id',
     element: <OrderDetailPage />
+  },
+
+  {
+    path: '/admin/warehouse/add',
+    element: <AddWarehouse />
   },
 
   // Planet Route

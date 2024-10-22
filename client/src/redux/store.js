@@ -9,8 +9,8 @@ import {
     PURGE, 
     REGISTER 
   } from 'redux-persist';
-  
 import storage from 'redux-persist/lib/storage'
+import loadingSlice from './loadingSlice.js'
 import adminSlice from "./adminSlice.js";
 import planetSlice from "./planetSlice.js";
 import spaceStationSlice from "./spaceStationSlice.js";
@@ -26,6 +26,7 @@ const persistConfig = {
 }
 
 const rootReducer = combineReducers({
+    loading: loadingSlice,
     admin: adminSlice,
     planet: planetSlice,
     spaceStation: spaceStationSlice,

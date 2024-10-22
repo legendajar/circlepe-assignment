@@ -1,8 +1,8 @@
 import Navbar from '../shared/Navbar'
 import Sidebar from '../shared/Sidebar'
-import AdminDashboardSection from './AdminDashboardSection'
+import AddWarehouseSection from './AddWarehouseSection'
 
-const AdminDashboard = () => {
+const AddWarehouse = () => {
   return (
     <div>
         <Navbar />
@@ -11,11 +11,11 @@ const AdminDashboard = () => {
                 <Sidebar />
             </div>
             <div className='w-5/6'>
-                <AdminDashboardSection />
+                <AddWarehouseSection />
             </div>
         </div>
     </div>
   )
 }
 
-export default AdminDashboard
+export default AddWarehouse
