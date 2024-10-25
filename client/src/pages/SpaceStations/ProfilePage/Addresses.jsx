@@ -5,28 +5,25 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { SPACE_STATION_API_END_POINT } from "@/utils/URLS";
+import { toast } from "sonner";
 
 const Addresses = () => {
-  const params = useParams();
-  const id = params.id;
-
-  // State to control data refresh and errors
-  const [refreshData, setRefreshData] = useState(false);
-  const [deleteError, setDeleteError] = useState(null);
-
-  // Fetch data on mount and on refreshData change
-  useGetSpaceStationById(id, refreshData);
-
-  const addresses = useSelector((store) => store.spaceStation.singleSpaceStation?.address || []);
+  const { id } = useParams();
+  const [isDataRefreshed, setIsDataRefreshed] = useState(false);
   const [showAddAddressForm, setShowAddAddressForm] = useState(false);
 
-  // Handlers for adding and deleting addresses
+  // Fetch space station data
+  useGetSpaceStationById(id, isDataRefreshed);
+
+  // Access addresses from Redux store
+  const addresses = useSelector((store) => store.spaceStation.singleSpaceStation?.address || []);
+
+  // Handlers for toggling the form and refreshing data
   const handleAddAddressClick = () => setShowAddAddressForm(true);
   const closeAddAddressForm = () => setShowAddAddressForm(false);
-
   const handleAddressAdded = () => {
     setShowAddAddressForm(false);
-    setRefreshData((prev) => !prev);
+    setIsDataRefreshed((prev) => !prev);
   };
 
   const handleDeleteAddress = async (addressIndex) => {
@@ -37,13 +34,13 @@ const Addresses = () => {
       });
 
       if (res.data.success) {
-        setDeleteError(null);
-        setRefreshData((prev) => !prev);
+        setIsDataRefreshed((prev) => !prev);
+        toast.success("Address Deleted Successfully");
       } else {
-        setDeleteError(`Failed to delete address: ${res.data.message}`);
+        toast.error(res.data.message);
       }
     } catch (error) {
-      setDeleteError(`Error deleting address: ${error.message}`);
+      toast.error(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -57,14 +54,7 @@ const Addresses = () => {
         + Add New Address
       </button>
 
-      {/* Display delete error message */}
-      {deleteError && (
-        <div className="text-red-600 bg-red-100 border border-red-200 p-4 rounded-lg">
-          {deleteError}
-        </div>
-      )}
-
-      {/* Address List */}
+      {/* Conditional rendering of addresses */}
       {addresses.length > 0 ? (
         addresses.map((address, index) => (
           <div

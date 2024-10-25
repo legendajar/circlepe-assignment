@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { SPACE_STATION_API_END_POINT } from "@/utils/URLS";
 import OtpPopUp from "@/components/SpaceStations/OtpPopUp/OtpPopUp";
+import { toast } from "sonner";
 
 const ResetPassword = () => {
     const [email, setEmail] = useState("");
@@ -31,14 +32,14 @@ const ResetPassword = () => {
             });
 
             if (res.data.success) {
-                alert(res.data.message);
+                toast.success(res.data.message);
                 setShowOtpPopup(true); // Show OTP popup
             } else {
-                alert(res.data.message);
+                toast.error(res.data.message);
             }
         } catch (err) {
             console.log(err);
-            alert("An error occurred. Please try again.");
+            toast.error(err.response.data.message);
         }
     };
 

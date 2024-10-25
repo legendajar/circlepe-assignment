@@ -3,6 +3,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SPACE_STATION_API_END_POINT } from '@/utils/URLS';
+import { toast } from 'sonner';
 SPACE_STATION_API_END_POINT
 
 const ResetPasswordForm = () => {
@@ -10,9 +11,6 @@ const ResetPasswordForm = () => {
     password: '',
     confirmPassword: ''
   })
-
-  const [error, setError] = useState('');
-
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -36,7 +34,7 @@ const ResetPasswordForm = () => {
     e.preventDefault();
 
     if (input.password !== input.confirmPassword) {
-        setError('Passwords do not match');
+        toast.error('Passwords do not match');
         return;
     }
 
@@ -54,12 +52,13 @@ const ResetPasswordForm = () => {
 
         if (res.data.success) {
             navigate('/login')
-            setError(res.data.message)
+            toast.success(res.data.message)
         } else {
-            setError(res.data.message)
+            toast.error(res.data.message)
         }
     } catch (err) {
         console.log(err)
+        toast.error(err.response.data.message)
     }
   }
 

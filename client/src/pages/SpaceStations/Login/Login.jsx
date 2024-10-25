@@ -11,6 +11,7 @@ import { setUser } from "@/redux/spaceStationSlice";
 import platform from "platform";
 import getLocationByIp from "@/utils/locationDetection.js";
 import getIpAddress from "@/utils/getIPAddress.js";
+import { toast } from "sonner";
 
 const Login = () => {
   const [visible, setVisible] = useState(false);
@@ -67,11 +68,11 @@ const Login = () => {
       if (res.data.success) {
         dispatch(setUser(res.data.user));
         navigate("/");
-        alert(res.data.message);
+        toast.success(res.data.message);
       }
     } catch (err) {
       console.error(err);
-      alert("An error occurred while logging in. Please try again.");
+      toast.error(err.response.data.message);
     }
   };
 

@@ -1,5 +1,5 @@
 import express from 'express'
-import { deleteSpaceStation, getAllSpaceStation, getSpaceStationById, login, register, updateSpaceStation, logout, changePassword, addAddress, forgotPassword, resetPasswordOTPVerification, resendOTP, resetPassword, deleteAddress } from '../controllers/space_station.controller.js'
+import { deleteSpaceStation, getAllSpaceStation, getSpaceStationById, login, register, updateSpaceStation, logout, changePassword, addAddress, forgotPassword, resetPasswordOTPVerification, resendOTP, resetPassword, deleteAddress, accountOTPSend, accountVerification } from '../controllers/space_station.controller.js'
 import isAuthenticated from '../middlewares/isAuthenticated.js'
 import spaceStationProfileImageUploader from '../middlewares/spaceStationProfileUploader.js'
 import resetPasswordAuthentication from '../middlewares/resetPasswordAuthentication.js'
@@ -20,5 +20,7 @@ SpaceStationRoute.post('/reset/password/verification', resetPasswordAuthenticati
 SpaceStationRoute.post('/reset/password/otp/resend', resetPasswordAuthentication, resendOTP)
 SpaceStationRoute.post('/password/reset', resetPasswordAuthentication, resetPassword)
 SpaceStationRoute.delete('/deleteAddress/:id', deleteAddress)
+SpaceStationRoute.post('/account/verification/send/otp', accountOTPSend)
+SpaceStationRoute.post('/account/verification/otp/verify', accountVerification)
 
 export default SpaceStationRoute

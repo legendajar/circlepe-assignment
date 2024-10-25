@@ -26,9 +26,10 @@ const spaceStationSchema = new mongoose.Schema({
         ip: { type: String },
         time: { type: Date, default: Date.now }
     }],
+    account_verified: { type: Boolean, default: false },
     reset_password_status: { type: Boolean, default: false },
-    reset_password: { type: Number },
-    reset_password_time: { type: Date },
+    otp: { type: Number },
+    otp_expiration_time: { type: Date },
 }, { timestamps: true });
 
 const spaceStationModel = mongoose.model("SpaceStation", spaceStationSchema);

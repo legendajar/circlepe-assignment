@@ -37,6 +37,7 @@ import SpaceStationProfilePage from "./pages/Admin/SpaceStationProfilePage/Space
 import OrderDetailPage from "./pages/Admin/OrderDetailPage/OrderDetailPage";
 import ProductDetailPage from "./pages/Admin/ProductDetailPage/ProductDetailPage";
 import AddWarehouse from "./pages/Admin/AddWarehouse/AddWarehouse";
+import OTPVerificationPage from "./pages/SpaceStations/OTPVerificationPage/OTPVerificationPage";
 
 
 
@@ -178,6 +179,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/register',
     element: <Register />
+  },
+
+  {
+    path: '/otp/verify',
+    element: <OTPVerificationPage />
   },
 
   {

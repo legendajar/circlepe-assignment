@@ -1,7 +1,8 @@
- import spaceStationModel from "../models/space_station.model.js";
+import spaceStationModel from "../models/space_station.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import generateOTP from "../utils/OTP_Gen.js";
+import transporter from "../utils/mailer.config.js";
 
 // Register or Add Space Station
 export const register = async (req, res) => {
@@ -41,9 +42,12 @@ export const register = async (req, res) => {
       mobile: mobile,
       password: hashedPassword,
     });
+
+    const spaceStation = await spaceStationModel.findOne({ email: email });
     return res.status(200).json({
       success: true,
       message: "Space Station created Successfully",
+      email: email
     });
   } catch (err) {
     console.log(err);
@@ -689,3 +693,134 @@ export const deleteAddress = async (req, res) => {
     })
   }
 }
+
+export const accountOTPSend = async (req, res) => {
+  try {
+    // Extract email from request body
+    const { email } = req.body;
+    
+    // Validate if email exists
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({
+        success: false,
+        message: "Valid email is required",
+      });
+    }
+
+    // Generate OTP
+    const otp = generateOTP();
+    
+    // Find the spaceStation by email
+    const spaceStation = await spaceStationModel.findOne({ email: email });
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found",
+        email
+      });
+    }
+
+    // Update OTP and expiration time (10 minutes)
+    spaceStation.otp = otp;
+    spaceStation.otp_expiration_time = new Date(Date.now() + 10 * 60000); // 10 minutes expiration
+
+    // Save the updated spaceStation to the database
+    await spaceStation.save();
+
+    // Define the email options
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: 'Account Activation OTP',
+      text: `Your OTP for account activation is ${otp}`,
+      html: `<p>Your OTP for account activation is <strong>${otp}</strong></p>`,
+    };
+
+    // Send email with OTP
+    await transporter.sendMail(mailOptions);
+
+    // Respond with success message
+    return res.status(200).json({
+      success: true,
+      message: `OTP sent successfully to ${email}`,
+    });
+
+  } catch (err) {
+    console.error("Error sending OTP: ", err);
+    
+    // Catch any internal error and return server error response
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+
+export const accountVerification = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    // Validate email and otp presence
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    if (!otp) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP is required",
+      });
+    }
+
+    // Find the spaceStation record by email
+    const spaceStation = await spaceStationModel.findOne({ email: email });
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found",
+      });
+    }
+
+    // Check if OTP has expired
+    if (spaceStation.otp_expiration_time < Date.now()) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired",
+      });
+    }
+
+
+    // Validate the provided OTP
+    if (spaceStation.otp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    // Clear the OTP and expiration time
+    spaceStation.otp = null
+    spaceStation.otp_expiration_time = null
+    spaceStation.account_verified = true
+
+    // Save the updated spaceStation to the database
+    await spaceStation.save();
+
+    // If OTP is valid and not expired
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+    });
+    
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};
+

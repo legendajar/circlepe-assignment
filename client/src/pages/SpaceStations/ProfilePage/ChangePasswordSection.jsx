@@ -4,6 +4,7 @@ import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "sonner";
 
 const ChangePasswordSection = () => {
   const {loading} = useSelector((store) => store.loading);
@@ -58,17 +59,18 @@ const ChangePasswordSection = () => {
       );
 
       if (res.data.success) {
-        alert(res.data.message);
+        toast.success(res.data.message);
         setInput({
           oldPassword: "",
           newPassword: "",
           confirmNewPassword: "",
         });
       } else {
-        alert(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (err) {
       console.log(err);
+      toast.error(err.response.data.message)
     } finally {
       dispatch(setLoading(false)); // Set loading to false when request completes
     }

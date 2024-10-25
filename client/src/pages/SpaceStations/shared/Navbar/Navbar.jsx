@@ -30,6 +30,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -51,9 +52,11 @@ const Navbar = () => {
         localStorage.removeItem("token");
         navigate("/login");
         dispatch(setUser(null));
+        toast.success(res.data.message);
       }
     } catch (err) {
       console.log("Logout Error: ", err);
+      toast.error(err.response.data.message)
     }
   };
   return (
