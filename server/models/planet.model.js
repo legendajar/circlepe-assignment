@@ -17,9 +17,10 @@ const planetSchema = new mongoose.Schema({
         ip: { type: String },
         time: { type: Date, default: Date.now }
     }],
-    reset_password: {type: Number},
+    account_verified: {type: Boolean, default: false},
+    otp: {type: Number},
     reset_password_status: {type: Boolean, default: false},
-    reset_password_time: {type: Date},
+    otp_expiration_time: {type: Date},
 }, {timestamps: true});
 
 const planetModel = mongoose.model("Planet", planetSchema);

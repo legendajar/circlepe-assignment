@@ -1,5 +1,5 @@
 import express from 'express'
-import { addPlanet, deletePlanet, getAllPlanet, getPlanetById, login, logout, updatePlanet } from '../controllers/planet.controller.js'
+import { addPlanet, deletePlanet, getAllPlanet, getPlanetById, login, logout, OTPVerification, sendVerificationOTP, updatePlanet } from '../controllers/planet.controller.js'
 import isPlanetAuthenticated from '../middlewares/isPlanetAuthenticated.js'
 
 
@@ -12,6 +12,8 @@ PlanetRoute.get('/all', getAllPlanet)
 PlanetRoute.get('/get/:id', getPlanetById)
 PlanetRoute.put('/update/:id', isPlanetAuthenticated, updatePlanet)
 PlanetRoute.delete('/delete/:id', deletePlanet)
+PlanetRoute.post('/account/otp/send', sendVerificationOTP)
+PlanetRoute.post('/account/verification/otp', OTPVerification)
 
 
 export default PlanetRoute

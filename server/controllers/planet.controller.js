@@ -1,8 +1,8 @@
 import planetModel from "../models/planet.model.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import productModel from "../models/product.model.js";
-import spaceStationModel from "../models/space_station.model.js";
+import generateOTP from "../utils/OTP_Gen.js"; 
+import transporter from "../utils/mailer.config.js";
 
 // Add Planet
 export const addPlanet = async(req, res) => {
@@ -313,3 +313,222 @@ export const deletePlanet = async (req, res) => {
         })
     }
 }
+
+// send verification otp
+export const sendVerificationOTP = async (req, res) => {
+    try{
+        const { email } = req.body
+        if(!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        const planet = await planetModel.findOne({ email: email })
+        if(!planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Space Station Not Found"
+            })
+        }
+
+        const otp = generateOTP()
+
+        planet.otp = otp
+        planet.otp_expiration_time = Date.now() * 10 * 60 + 1000;
+
+        await planet.save()
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "OTP Verification",
+            text: `Your OTP for account activation is ${otp}`,
+            html: `<p>Your OTP for account activation is <strong>${otp}</strong></p>`,
+        }
+
+        // Send email with OTP
+        await transporter.sendMail(mailOptions)
+
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successfully"
+        })
+
+    } catch (err) {
+        console.log("Error: ", err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+// verify OTP
+export const OTPVerification = async (req, res) => {
+    try {
+        const {email, otp} = req.body
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        if (!otp) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP is required"
+            })
+        }
+
+        const planet = await planetModel.findOne({ email: email })
+        console.log(planet)
+        if (!planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Planet Not Found"
+            })
+        }
+
+        if (String(planet.otp) !== String(otp)) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP"
+            })
+        }
+
+        if (planet.otp_expiration_time < Date.now()) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP expired"
+            })
+        }
+
+        planet.account_verified = true
+        planet.otp = null
+        planet.otp_expiration_time = null
+
+        await planet.save()
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP verified successfully"
+        })
+    } catch (err) {
+        console.log("Error: ",err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+// Forgot Password
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        const planet = await planetModel.findOne({ email: email })
+        if (!planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Planet Not Found"
+            })
+        }
+
+        const otp = generateOTP()
+        planet.otp = otp
+        planet.otp_expiration_time = Date.now() * 10 * 60 + 1000;
+
+        await planet.save()
+
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Password Reset",
+            text: `Your OTP for password reset is ${otp}`,
+            html: `<p>Your OTP for password reset is <strong>${otp}</strong></p>`,
+        }
+
+        // Send email with OTP
+        await transporter.sendMail(mailOptions)
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP sent successfully"
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+
+export const forgotPasswordOTPVerification = async (req, res) => {
+    try {
+        const { email, otp } = req.body
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required"
+            })
+        }
+
+        if (!otp) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP is required"
+            })
+        }
+
+        const planet = await planetModel.findOne({ email: email })
+        if (!planet) {
+            return res.status(404).json({
+                success: false,
+                message: "Planet Not Found"
+            })
+        }
+
+        if (planet.otp !== otp) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid OTP"
+            })
+        }
+
+        if (planet.otp_expiration_time < Date.now()) {
+            return res.status(400).json({
+                success: false,
+                message: "OTP Expired!!"
+            })
+        }
+
+        planet.reset_password_status = true
+        planet.otp = null
+        planet.otp_expiration_time = null
+
+        await planet.save()
+
+        return res.status(200).json({
+            success: true,
+            message: "OTP verified successfully"
+        })
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        })
+    }
+}
+

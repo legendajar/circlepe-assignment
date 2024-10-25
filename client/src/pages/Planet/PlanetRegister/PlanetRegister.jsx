@@ -6,6 +6,7 @@ import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 const PlanetRegister = () => {
   const [visible, setVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
@@ -28,6 +29,26 @@ const PlanetRegister = () => {
   };
 
   const navigate = useNavigate();
+
+  const sendOTP = async (email) => {
+    try {
+      const res = await axios.post(`${PLANET_API_END_POINT}/account/otp/send`, {email: email}, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true
+      })
+
+      if (res.data.success) {
+        toast.success(res.data.message)
+      } else {
+        toast.error(res.data.message)
+      }
+    } catch (err) {
+      console.log(err)
+      toast.error(err.response.data.message)
+    }
+  }
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -54,14 +75,14 @@ const PlanetRegister = () => {
       );
 
       if (res.data.success) {
-        alert(res.data.message);
-        navigate("/planet/login");
+        toast.success(res.data.message);
+        navigate("/planet/account/otp/send", { state: {email: input.email}});
+        sendOTP(input.email)
       } else {
-        alert(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (err) {
       console.log(err);
-      setError("An error occurred. Please try again.");
     }
   };
 

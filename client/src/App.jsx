@@ -39,6 +39,7 @@ import ProductDetailPage from "./pages/Admin/ProductDetailPage/ProductDetailPage
 import AddWarehouse from "./pages/Admin/AddWarehouse/AddWarehouse";
 import OTPVerificationPage from "./pages/SpaceStations/OTPVerificationPage/OTPVerificationPage";
 import ResetPasswordOTP from "./pages/SpaceStations/ResetPasswordOTP/ResetPasswordOTP";
+import AccountOTPVerificationPage from "./pages/Planet/AccountOTPVerificaitonPage/AccountOTPVerificationPage";
 
 
 
@@ -139,6 +140,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/planet/register',
     element: <PlanetRegister />
+  },
+
+  {
+    path: '/planet/account/otp/send',
+    element: <AccountOTPVerificationPage />
   },
 
   {

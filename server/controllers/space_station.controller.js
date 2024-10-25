@@ -482,7 +482,6 @@ export const forgotPassword = async (req, res) => {
       const token = jwt.sign({ userId: spaceStation._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: "1d" })
 
       const otp = generateOTP()
-      console.log(`Your password to reset password is: ${otp}`)
   
       spaceStation.otp = otp
       spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000
