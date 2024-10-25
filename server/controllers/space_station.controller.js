@@ -484,10 +484,22 @@ export const forgotPassword = async (req, res) => {
       const otp = generateOTP()
       console.log(`Your password to reset password is: ${otp}`)
   
-      spaceStation.reset_password = otp
-      spaceStation.reset_password_time = Date.now() + 10 * 60 * 1000
+      spaceStation.otp = otp
+      spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000
   
       await spaceStation.save()
+
+      // Define the email options
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Reset Password OTP',
+        text: `Your OTP for reset password is ${otp}`,
+        html: `<p>Your OTP for reset password is <strong>${otp}</strong></p>`,
+      };
+
+      // Send email with OTP
+      await transporter.sendMail(mailOptions);
   
       return res.status(200).cookie("resetPasswordToken", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
@@ -535,14 +547,14 @@ export const resetPasswordOTPVerification = async (req, res) => {
       })
     }
 
-    if (spaceStation.reset_password !== otp) {
+    if (spaceStation.otp !== otp) {
       return res.status(400).json({
         success: false,
         message: "Invalid OTP"
       })
     }
 
-    if (spaceStation.reset_password_time < Date.now()) {
+    if (spaceStation.otp_expiration_time < Date.now()) {
       return res.status(400).json({
         success: false,
         message: "OTP Expired"
@@ -587,8 +599,8 @@ export const resendOTP = async (req, res) => {
 
     console.log(`Your OTP for reset your password is: ${otp}`)
 
-    spaceStation.reset_password = otp
-    spaceStation.reset_password_time = Date.now() + 10 * 60 * 1000
+    spaceStation.otp = otp
+    spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000
 
     return res.status(200).json({
       success: true,

@@ -38,6 +38,7 @@ import OrderDetailPage from "./pages/Admin/OrderDetailPage/OrderDetailPage";
 import ProductDetailPage from "./pages/Admin/ProductDetailPage/ProductDetailPage";
 import AddWarehouse from "./pages/Admin/AddWarehouse/AddWarehouse";
 import OTPVerificationPage from "./pages/SpaceStations/OTPVerificationPage/OTPVerificationPage";
+import ResetPasswordOTP from "./pages/SpaceStations/ResetPasswordOTP/ResetPasswordOTP";
 
 
 
@@ -239,6 +240,11 @@ const appRouter = createBrowserRouter([
   {
     path: '/spacestation/reset/password/form',
     element: <ResetPasswordForm />
+  },
+
+  {
+    path: '/reset/password/otp',
+    element: <ResetPasswordOTP />
   }
 
 ]);

@@ -67,8 +67,6 @@ const ResetPasswordForm = () => {
       <div className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Reset Password</h2>
         
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        
         <form onSubmit={submitHandler}>
           {/* Password Field */}
           <div className="mb-4">
