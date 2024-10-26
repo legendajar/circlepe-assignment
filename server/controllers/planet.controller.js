@@ -45,6 +45,34 @@ export const addPlanet = async(req, res) => {
         })
 
         const savedPlanet = await newPlanet.save();
+
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Welcome to Planet - Account Successfully Created",
+            text: `Hello,
+        
+                Welcome to Planet! Your account has been successfully created.
+                
+                We’re excited to have you with us. You can now log in and start exploring all the features and services we offer. If you have any questions, feel free to reach out to our support team.
+                
+                Best regards,
+                The Planet Team`, 
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h2>Welcome to Planet!</h2>
+                    <p>Your account has been successfully created, and we’re thrilled to have you with us.</p>
+                    <p>You can now log in to your account and begin exploring all the features and services we offer.</p>
+                    <p>If you have any questions or need assistance, our support team is here to help.</p>
+                    <br />
+                    <p>Best regards,</p>
+                    <p><strong>The Planet Team</strong></p>
+                </div>`,
+        };
+        
+
+        // Send email with OTP
+        await transporter.sendMail(mailOptions)
         return res.status(201).json({
             success: true,
             message: "Planet added successfully",

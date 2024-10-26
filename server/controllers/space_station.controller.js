@@ -44,10 +44,11 @@ export const register = async (req, res) => {
     });
 
     const spaceStation = await spaceStationModel.findOne({ email: email });
+
     return res.status(200).json({
       success: true,
       message: "Space Station created Successfully",
-      email: email
+      email: email,
     });
   } catch (err) {
     console.log(err);
@@ -92,7 +93,7 @@ export const login = async (req, res) => {
     // Create new login entry with current date and time
     const newLogin = {
       ip: String(ip), // Ensure ip is a string
-      time: new Date() // Set to current date and time
+      time: new Date(), // Set to current date and time
     };
 
     // Push new login to last_login array
@@ -112,6 +113,43 @@ export const login = async (req, res) => {
         device_location: location,
       };
       spaceStation.device_details.push(newDeviceDetails);
+
+      const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "New Device Login Detected - Space Station Account",
+        text: `Hello,
+
+            We noticed a login to your Space Station account from a new device. If this was you, there's nothing to worry about. Here are the details:
+
+            - Device: ${deviceName || "Unknown"}
+            - Location: ${location || "Unknown"}
+            - Time: ${newLogin.time.toLocaleString() || "Unknown"}
+
+            If you did not initiate this login, please reset your password immediately and contact our support team for assistance.
+
+            Safe travels,
+            The Space Station Team at Intergalactic Ecom`,
+        html: `
+            <div style="font-family: Arial, sans-serif; color: #333;">
+                <h2>New Device Login Detected</h2>
+                <p>Hello,</p>
+                <p>We noticed a login to your Space Station account from a new device. If this was you, there's no need for concern. Below are the login details:</p>
+                <ul>
+                    <li><strong>Device</strong>: ${deviceName || "Unknown"}</li>
+                    <li><strong>Location</strong>: ${location || "Unknown"}</li>
+                    <li><strong>Time</strong>: ${newLogin.time.toLocaleString() || "Unknown"}</li>
+                </ul>
+                <p>If you did not initiate this login, we recommend resetting your password immediately and reaching out to our support team.</p>
+                <br />
+                <p>Safe travels,</p>
+                <p><strong>The Space Station Team</strong></p>
+                <p><em>at Intergalactic Ecom</em></p>
+            </div>`,
+      };
+
+      // Send email
+      await transporter.sendMail(mailOptions);
     }
 
     // Save updated spaceStation document
@@ -162,6 +200,7 @@ export const login = async (req, res) => {
     });
   }
 };
+
 
 export const logout = async (req, res) => {
   try {
@@ -244,7 +283,7 @@ export const getSpaceStationById = async (req, res) => {
 export const updateSpaceStation = async (req, res) => {
   // Correct way to access id from req
   const id = req.id;
-  console.log(id)
+  console.log(id);
 
   // Destructure the fields from request body
   const { name, email, mobile } = req.body;
@@ -285,18 +324,18 @@ export const updateSpaceStation = async (req, res) => {
       { new: true } // Returns the updated document
     );
 
-    const updatedSpaceStationData = await spaceStationModel.findById(id)
+    const updatedSpaceStationData = await spaceStationModel.findById(id);
 
     const updateduserData = {
-        _id: updatedSpaceStationData._id,
-        name: updatedSpaceStationData.name,
-        email: updatedSpaceStationData.email,
-        mobile: updatedSpaceStationData.mobile,
-        address: updatedSpaceStationData.address,
-        device_details: updatedSpaceStationData.device_details,
-        image: updatedSpaceStationData.image,
-        last_login: updatedSpaceStationData.last_login,
-    }
+      _id: updatedSpaceStationData._id,
+      name: updatedSpaceStationData.name,
+      email: updatedSpaceStationData.email,
+      mobile: updatedSpaceStationData.mobile,
+      address: updatedSpaceStationData.address,
+      device_details: updatedSpaceStationData.device_details,
+      image: updatedSpaceStationData.image,
+      last_login: updatedSpaceStationData.last_login,
+    };
 
     // Return the updated space station
     return res.status(200).json({
@@ -313,7 +352,6 @@ export const updateSpaceStation = async (req, res) => {
     });
   }
 };
-
 
 // Delete Space Station
 export const deleteSpaceStation = async (req, res) => {
@@ -351,29 +389,28 @@ export const deleteSpaceStation = async (req, res) => {
 export const changePassword = async (req, res) => {
   try {
     const id = req.id;
-    const { oldPassword, newPassword, confirmNewPassword } = req.body
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
 
-    if(!id){
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
-      })
+        message: "Invalid ID",
+      });
     }
 
-    if (!oldPassword ||!newPassword ||!confirmNewPassword) {
+    if (!oldPassword || !newPassword || !confirmNewPassword) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required"
-      })
+        message: "All fields are required",
+      });
     }
 
-
-    const spaceStation = await spaceStationModel.findById(id)
+    const spaceStation = await spaceStationModel.findById(id);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
     const isMatch = await bcrypt.compare(oldPassword, spaceStation.password);
@@ -394,324 +431,355 @@ export const changePassword = async (req, res) => {
     if (oldPassword === newPassword) {
       return res.status(300).json({
         success: false,
-        message: "New password must be different from old password"
-      })
+        message: "New password must be different from old password",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    
+
     spaceStation.password = hashedPassword;
-    await spaceStation.save()
+    await spaceStation.save();
 
     return res.status(200).json({
       success: true,
-      message: "Password changed successfully"
-    })
+      message: "Password changed successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const addAddress = async (req, res) => {
   try {
     const spaceStationId = req.id;
-    const { name, mobile, firstLine, secondLine, city, state, country, pincode } = req.body
+    const {
+      name,
+      mobile,
+      firstLine,
+      secondLine,
+      city,
+      state,
+      country,
+      pincode,
+    } = req.body;
 
     if (!spaceStationId) {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
-      })
+        message: "Invalid ID",
+      });
     }
 
-    if (!name || !mobile || !firstLine || !city || !state || !country || !pincode) {
+    if (
+      !name ||
+      !mobile ||
+      !firstLine ||
+      !city ||
+      !state ||
+      !country ||
+      !pincode
+    ) {
       return res.status(400).json({
         success: false,
-        message: "All fields are required"
-      })
+        message: "All fields are required",
+      });
     }
 
-    const spaceStation = await spaceStationModel.findById(spaceStationId)
+    const spaceStation = await spaceStationModel.findById(spaceStationId);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
-    spaceStation.address.push({ name, mobile, firstLine, secondLine, city, state, country, pincode })
+    spaceStation.address.push({
+      name,
+      mobile,
+      firstLine,
+      secondLine,
+      city,
+      state,
+      country,
+      pincode,
+    });
 
-    await spaceStation.save()
+    await spaceStation.save();
 
     return res.status(200).json({
       success: true,
-      message: "Address added successfully"
-    })
+      message: "Address added successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const forgotPassword = async (req, res) => {
   try {
-    const { email } = req.body
-      
-      if (!email) {
-        return res.status(400).json({
-          success: false,
-          message: "Email is required"
-        })
-      }
-  
-      const spaceStation = await spaceStationModel.findOne({ email })
-      if (!spaceStation) {
-        return res.status(404).json({
-          success: false,
-          message: "Space Station Not Found"
-        })
-      }
-  
-      const token = jwt.sign({ userId: spaceStation._id }, process.env.RESET_PASSWORD_KEY, { expiresIn: "1d" })
+    const { email } = req.body;
 
-      const otp = generateOTP()
-  
-      spaceStation.otp = otp
-      spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000
-  
-      await spaceStation.save()
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
 
-      // Define the email options
-      const mailOptions = {
-        from: process.env.EMAIL,
-        to: email,
-        subject: 'Reset Password OTP',
-        text: `Your OTP for reset password is ${otp}`,
-        html: `<p>Your OTP for reset password is <strong>${otp}</strong></p>`,
-      };
+    const spaceStation = await spaceStationModel.findOne({ email });
+    if (!spaceStation) {
+      return res.status(404).json({
+        success: false,
+        message: "Space Station Not Found",
+      });
+    }
 
-      // Send email with OTP
-      await transporter.sendMail(mailOptions);
-  
-      return res.status(200).cookie("resetPasswordToken", token, {
+    const token = jwt.sign(
+      { userId: spaceStation._id },
+      process.env.RESET_PASSWORD_KEY,
+      { expiresIn: "1d" }
+    );
+
+    const otp = generateOTP();
+
+    spaceStation.otp = otp;
+    spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000;
+
+    await spaceStation.save();
+
+    // Define the email options
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Reset Password OTP",
+      text: `Your OTP for reset password is ${otp}`,
+      html: `<p>Your OTP for reset password is <strong>${otp}</strong></p>`,
+    };
+
+    // Send email with OTP
+    await transporter.sendMail(mailOptions);
+
+    return res
+      .status(200)
+      .cookie("resetPasswordToken", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
         httpOnly: true,
         sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         secure: process.env.NODE_ENV === "production",
-      }).json({
-        success: true,
-        message: "OTP to reset the password has been sent to link"
       })
-
+      .json({
+        success: true,
+        message: "OTP to reset the password has been sent to link",
+      });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const resetPasswordOTPVerification = async (req, res) => {
   try {
-    const id  = req.id;
-    const otp = Number(req.body.otp)
+    const id = req.id;
+    const otp = Number(req.body.otp);
 
-    if(!id){
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
-      })
+        message: "Invalid ID",
+      });
     }
 
     if (!otp) {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP"
-      })
+        message: "Invalid OTP",
+      });
     }
 
-    const spaceStation = await spaceStationModel.findById(id)
+    const spaceStation = await spaceStationModel.findById(id);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
     if (spaceStation.otp !== otp) {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP"
-      })
+        message: "Invalid OTP",
+      });
     }
 
     if (spaceStation.otp_expiration_time < Date.now()) {
       return res.status(400).json({
         success: false,
-        message: "OTP Expired"
-      })
+        message: "OTP Expired",
+      });
     }
 
-    spaceStation.reset_password_status = true
+    spaceStation.reset_password_status = true;
 
-    spaceStation.save()
+    spaceStation.save();
     return res.status(200).json({
       success: true,
-      message: "OTP verified successfully"
-    })
+      message: "OTP verified successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const resendOTP = async (req, res) => {
   try {
-    const id = req.id
-    if(!id) {
+    const id = req.id;
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
-      })
+        message: "Invalid ID",
+      });
     }
 
-    const spaceStation = await spaceStationModel.findById(id)
+    const spaceStation = await spaceStationModel.findById(id);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
-    const otp = generateOTP()
+    const otp = generateOTP();
 
-    console.log(`Your OTP for reset your password is: ${otp}`)
+    console.log(`Your OTP for reset your password is: ${otp}`);
 
-    spaceStation.otp = otp
-    spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000
+    spaceStation.otp = otp;
+    spaceStation.otp_expiration_time = Date.now() + 10 * 60 * 1000;
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent successfully"
-    })
+      message: "OTP sent successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const resetPassword = async (req, res) => {
   try {
-    const id = req.id
-    const {newPassword, confirmPassword} = req.body
-    if(!id) {
+    const id = req.id;
+    const { newPassword, confirmPassword } = req.body;
+    if (!id) {
       return res.status(400).json({
         success: false,
-        message: "Invalid ID"
-      })
+        message: "Invalid ID",
+      });
     }
 
-    if (!newPassword, !confirmPassword) {
+    if ((!newPassword, !confirmPassword)) {
       return res.status(400).json({
         success: false,
-        message: "All field are necessary"
-      })
+        message: "All field are necessary",
+      });
     }
 
     if (newPassword !== confirmPassword) {
       return res.status(400).json({
         success: false,
-        message: "Password does not match"
-      })
+        message: "Password does not match",
+      });
     }
 
-    const spaceStation = await spaceStationModel.findById(id)
+    const spaceStation = await spaceStationModel.findById(id);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
-    const salt = await bcrypt.genSalt(10)
-    const password = await bcrypt.hash(newPassword, salt)
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(newPassword, salt);
 
-    spaceStation.password = password
-    spaceStation.reset_password_status = false
+    spaceStation.password = password;
+    spaceStation.reset_password_status = false;
 
-    await spaceStation.save()
+    await spaceStation.save();
 
     // Clear the authentication cookie
-    res.clearCookie('authToken', {
+    res.clearCookie("authToken", {
       httpOnly: true, // Ensures the cookie is sent only over HTTP(S), not accessible via JavaScript
-      sameSite: 'Strict', // Helps prevent CSRF attacks
-      secure: process.env.NODE_ENV === 'production', // Send the cookie only over HTTPS in production
+      sameSite: "Strict", // Helps prevent CSRF attacks
+      secure: process.env.NODE_ENV === "production", // Send the cookie only over HTTPS in production
     });
 
     return res.status(200).json({
       success: true,
-      message: "Password reset successfully"
-    })
-
+      message: "Password reset successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const deleteAddress = async (req, res) => {
-  const spaceStationId = req.params.id
-  const addressIndex = req.body
+  const spaceStationId = req.params.id;
+  const addressIndex = req.body;
 
   try {
-    const spaceStation = await spaceStationModel.findById(spaceStationId)
+    const spaceStation = await spaceStationModel.findById(spaceStationId);
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
-        message: "Space Station Not Found"
-      })
+        message: "Space Station Not Found",
+      });
     }
 
-    spaceStation.address.splice(addressIndex, 1)
-    await spaceStation.save()
+    spaceStation.address.splice(addressIndex, 1);
+    await spaceStation.save();
 
     return res.status(200).json({
       success: true,
-      message: "Address deleted successfully"
-    })
+      message: "Address deleted successfully",
+    });
   } catch (err) {
-    console.log(err)
+    console.log(err);
     return res.status(500).json({
       success: false,
-      message: "Internal Server Error"
-    })
+      message: "Internal Server Error",
+    });
   }
-}
+};
 
 export const accountOTPSend = async (req, res) => {
   try {
     // Extract email from request body
     const { email } = req.body;
-    
+
     // Validate if email exists
-    if (!email || typeof email !== 'string') {
+    if (!email || typeof email !== "string") {
       return res.status(400).json({
         success: false,
         message: "Valid email is required",
@@ -720,14 +788,14 @@ export const accountOTPSend = async (req, res) => {
 
     // Generate OTP
     const otp = generateOTP();
-    
+
     // Find the spaceStation by email
     const spaceStation = await spaceStationModel.findOne({ email: email });
     if (!spaceStation) {
       return res.status(404).json({
         success: false,
         message: "Space Station Not Found",
-        email
+        email,
       });
     }
 
@@ -742,7 +810,7 @@ export const accountOTPSend = async (req, res) => {
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
-      subject: 'Account Activation OTP',
+      subject: "Account Activation OTP",
       text: `Your OTP for account activation is ${otp}`,
       html: `<p>Your OTP for account activation is <strong>${otp}</strong></p>`,
     };
@@ -755,10 +823,9 @@ export const accountOTPSend = async (req, res) => {
       success: true,
       message: `OTP sent successfully to ${email}`,
     });
-
   } catch (err) {
     console.error("Error sending OTP: ", err);
-    
+
     // Catch any internal error and return server error response
     return res.status(500).json({
       success: false,
@@ -803,7 +870,6 @@ export const accountVerification = async (req, res) => {
       });
     }
 
-
     // Validate the provided OTP
     if (spaceStation.otp !== otp) {
       return res.status(400).json({
@@ -813,19 +879,46 @@ export const accountVerification = async (req, res) => {
     }
 
     // Clear the OTP and expiration time
-    spaceStation.otp = null
-    spaceStation.otp_expiration_time = null
-    spaceStation.account_verified = true
+    spaceStation.otp = null;
+    spaceStation.otp_expiration_time = null;
+    spaceStation.account_verified = true;
 
     // Save the updated spaceStation to the database
     await spaceStation.save();
 
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject:
+        "Welcome to Space Station - Your Intergalactic Account is Ready!",
+      text: `Hello,
+  
+          Welcome to Space Station, part of the Intergalactic Ecom network! Your account has been successfully created.
+          
+          Get ready to explore a universe of unique interstellar products and services tailored just for you. Log in to your account to start your journey with Space Station. Our support team is here to assist you with any questions along the way.
+          
+          Safe travels,
+          The Space Station Team at Intergalactic Ecom`,
+      html: `
+          <div style="font-family: Arial, sans-serif; color: #333;">
+              <h2>Welcome to Space Station!</h2>
+              <p>We’re excited to have you onboard at Space Station, an exclusive part of Intergalactic Ecom.</p>
+              <p>Your account has been successfully created. Prepare to explore a universe of unique interstellar products and services tailored for your needs.</p>
+              <p>You can log in to your account and begin your journey with us. If you have any questions, our support team is here to assist you.</p>
+              <br />
+              <p>Safe travels,</p>
+              <p><strong>The Space Station Team</strong></p>
+              <p><em>at Intergalactic Ecom</em></p>
+          </div>`,
+    };
+
+    // Send email with OTP
+    await transporter.sendMail(mailOptions);
     // If OTP is valid and not expired
     return res.status(200).json({
       success: true,
       message: "OTP verified successfully",
     });
-    
   } catch (err) {
     console.error(err);
     return res.status(500).json({
@@ -834,4 +927,3 @@ export const accountVerification = async (req, res) => {
     });
   }
 };
-
