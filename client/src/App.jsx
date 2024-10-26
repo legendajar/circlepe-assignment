@@ -40,6 +40,9 @@ import AddWarehouse from "./pages/Admin/AddWarehouse/AddWarehouse";
 import OTPVerificationPage from "./pages/SpaceStations/OTPVerificationPage/OTPVerificationPage";
 import ResetPasswordOTP from "./pages/SpaceStations/ResetPasswordOTP/ResetPasswordOTP";
 import AccountOTPVerificationPage from "./pages/Planet/AccountOTPVerificaitonPage/AccountOTPVerificationPage";
+import ForgotPassword from "./pages/Planet/ForgotPassword/ForgotPassword";
+import ForgotPasswordOTP from "./pages/Planet/ForgotPassword/ForgotPasswordOTP";
+import ForgotPasswordForm from "./pages/Planet/ForgotPassword/ForgotPasswordForm";
 
 
 
@@ -175,6 +178,21 @@ const appRouter = createBrowserRouter([
   {
     path:'/planet/order/view/:id',
     element: <OrderDetailsPage />
+  },
+
+  {
+    path: '/planet/forgot/password',
+    element: <ForgotPassword />
+  },
+
+  {
+    path: '/planet/forgot/password/otp',
+    element: <ForgotPasswordOTP />
+  },
+
+  {
+    path: '/planet/forgot/password/form',
+    element: <ForgotPasswordForm />
   },
 
   // Space Station Route

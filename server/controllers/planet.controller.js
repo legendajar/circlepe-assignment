@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 import generateOTP from "../utils/OTP_Gen.js"; 
 import transporter from "../utils/mailer.config.js";
 
+
 // Add Planet
 export const addPlanet = async(req, res) => {
     try {
@@ -499,7 +500,7 @@ export const forgotPasswordOTPVerification = async (req, res) => {
             })
         }
 
-        if (planet.otp !== otp) {
+        if (String(planet.otp) !== String(otp)) {
             return res.status(400).json({
                 success: false,
                 message: "Invalid OTP"
@@ -532,3 +533,57 @@ export const forgotPasswordOTPVerification = async (req, res) => {
     }
 }
 
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword, confirmPassword } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+    if (!newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New Password is required",
+      });
+    }
+    if (!confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "Confirm Password is required",
+      });
+    }
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        success: false,
+        message: "New Password and Confirm Password do not match",
+      });
+    }
+
+    const planet = await planetModel.findOne({ email });
+    if (!planet) {
+      return res.status(404).json({
+        success: false,
+        message: "Planet Not Found",
+      });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+    planet.password = hashedPassword;
+    await planet.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (err) {
+    console.error("Error resetting password:", err);
+    return res.status(500).json({
+      success: false,
+      message: "Internal Server Error",
+    });
+  }
+};

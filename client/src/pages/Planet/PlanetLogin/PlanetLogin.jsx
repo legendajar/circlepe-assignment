@@ -154,7 +154,7 @@ const PlanetLogin = () => {
           </p>
           <p className="text-gray-600 text-sm mt-2">
             <Link
-              to="/spacestation/reset/password"
+              to="/planet/forgot/password"
               className="text-indigo-600 hover:text-indigo-800"
             >
               Forgot password? Reset it here

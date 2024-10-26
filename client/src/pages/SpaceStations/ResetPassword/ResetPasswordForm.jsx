@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { SPACE_STATION_API_END_POINT } from '@/utils/URLS';
 import { toast } from 'sonner';
-SPACE_STATION_API_END_POINT
+
 
 const ResetPasswordForm = () => {
   const [ input, setInput ] = useState({
